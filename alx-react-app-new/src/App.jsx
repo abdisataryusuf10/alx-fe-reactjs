@@ -1,17 +1,3 @@
-import WelcomeMessage from './components/WelcomeMessage';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <WelcomeMessage />
-      {/* Other existing components */}
-    </div>
-  );
-}
-
-export default App;
-
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
