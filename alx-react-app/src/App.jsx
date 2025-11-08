@@ -1,4 +1,3 @@
-import WelcomeMessage from './components/WelcomeMessage.jsx'
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
@@ -33,4 +32,70 @@ function App() {
   )
 }
 
-export default App
+import WelcomeMessage from './components/WelcomeMessage';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <WelcomeMessage />
+      {/* Other existing components */}
+    </div>
+  );
+}
+
+
+import Header from './components/Header';
+import MainContent from './components/MainContent';
+import Footer from './components/Footer';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <Header />
+      <MainContent />
+      <Footer />
+    </div>
+  );
+}
+
+
+import Header from './components/Header';
+import MainContent from './components/MainContent';
+import Footer from './components/Footer';
+import UserProfile from './components/UserProfile';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <Header />
+      <MainContent />
+      
+      {/* User Profile Component with Props */}
+      <UserProfile 
+        name="Alice" 
+        age="25" 
+        bio="Loves hiking and photography" 
+      />
+      
+      {/* You can add multiple user profiles with different props */}
+      <UserProfile 
+        name="Bob" 
+        age="30" 
+        bio="Passionate about cooking and traveling" 
+      />
+      
+      <UserProfile 
+        name="Charlie" 
+        age="22" 
+        bio="Enjoys coding and playing guitar" 
+      />
+      
+      <Footer />
+    </div>
+  );
+}
+
+export default App;
