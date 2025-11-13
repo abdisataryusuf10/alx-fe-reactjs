@@ -91,5 +91,15 @@ function App() {
     </UserProvider>
   )
 }
-
+import Navbar from './components/Navbar';
+function App() {
+    return (
+        <Router>
+            <Navbar />  {/* ← This is where Navbar gets placed */}
+            <Routes>
+                // ... routes
+            </Routes>
+        </Router>
+    );
+}
 export default App
