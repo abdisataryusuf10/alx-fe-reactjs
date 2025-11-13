@@ -40,3 +40,277 @@
 .read-the-docs {
   color: #888;
 }
+
+/* User Context and Profile Styles */
+.login-form,
+.login-status {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e9ecef;
+}
+
+.login-form h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.auth-toggle {
+  text-align: center;
+  margin-top: 15px;
+  color: #6c757d;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.btn-link:hover {
+  color: #0056b3;
+}
+
+.login-status h3 {
+  margin-top: 0;
+  color: #28a745;
+}
+
+/* Header Navigation */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.main-nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* User Profile Styles */
+.user-profile {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  margin: 20px auto;
+  max-width: 800px;
+  border: 1px solid #e9ecef;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f8f9fa;
+}
+
+.profile-header h2 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-logout {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-logout:hover {
+  background: #c82333;
+}
+
+.profile-view .info-group {
+  margin-bottom: 20px;
+}
+
+.info-group label {
+  font-weight: 600;
+  color: #495057;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.info-group p {
+  margin: 0;
+  color: #6c757d;
+}
+
+.skill-badge {
+  display: inline-block;
+  background: #007bff;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.preferences-section {
+  margin: 30px 0;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.preferences-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.tag {
+  background: #e7f3ff;
+  color: #0066cc;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tag-cuisine {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.tag-remove {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  margin-left: 5px;
+}
+
+.tag-remove:hover {
+  color: #dc3545;
+}
+
+.tags-input-group {
+  margin-top: 10px;
+}
+
+.tag-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.tag-input input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.btn-add-tag {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-add-tag:hover {
+  background: #218838;
+}
+
+.account-info {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.account-info h3 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.profile-edit-form {
+  max-width: 600px;
+}
+
+.profile-edit-form .form-actions {
+  margin-top: 30px;
+  display: flex;
+  gap: 15px;
+}
+
+.not-logged-in {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+}
+
+.profile-page {
+  padding: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .profile-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+  
+  .profile-actions .btn {
+    flex: 1;
+  }
+  
+  .tag-input {
+    flex-direction: column;
+  }
+  
+  .profile-edit-form .form-actions {
+    flex-direction: column;
+  }
+}
