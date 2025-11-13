@@ -121,4 +121,21 @@ function App() {
   );
 }
 
+import React from 'react';
+import Contact from './components/Contact'; // Add this import
+
+function App() {
+  return (
+    <div className="app">
+      <header className="app-header">
+        <h1>Recipe Sharing App</h1>
+      </header>
+      <main className="app-main">
+        <Contact /> {/* Add Contact component */}
+        <AddRecipeForm />
+        <RecipeList />
+      </main>
+    </div>
+  );
+}
 export default App;
