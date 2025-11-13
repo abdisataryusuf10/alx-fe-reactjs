@@ -225,3 +225,228 @@
     align-items: flex-start;
   }
 }
+
+/* Favorites and Recommendations Styles */
+.favorites-list,
+.recommendations-list {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e9ecef;
+}
+
+.favorites-list h2,
+.recommendations-list h2 {
+  margin-top: 0;
+  color: #2c3e50;
+  border-bottom: 2px solid #f8f9fa;
+  padding-bottom: 10px;
+}
+
+.recommendations-subtitle {
+  color: #6c757d;
+  font-size: 14px;
+  margin-top: -10px;
+  margin-bottom: 15px;
+}
+
+.favorites-grid,
+.recommendations-grid {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.favorite-card,
+.recommendation-card {
+  border: 2px solid #fff3cd;
+  background: #fffdf6;
+}
+
+.recommendation-card {
+  border-color: #d1ecf1;
+  background: #f8fdff;
+}
+
+/* Favorite Button Styles */
+.btn-favorite {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 5px;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.btn-favorite:hover {
+  transform: scale(1.2);
+}
+
+.btn-favorite.small {
+  font-size: 1em;
+}
+
+.btn-favorite.medium {
+  font-size: 1.2em;
+}
+
+.btn-favorite.large {
+  font-size: 1.5em;
+}
+
+.btn-favorite-active {
+  color: #dc3545;
+}
+
+.btn-favorite-inactive {
+  color: #6c757d;
+}
+
+/* Recipe Card Header */
+.recipe-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.recipe-card-header h3 {
+  margin: 0;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.favorite-header,
+.recommendation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.favorite-header h3,
+.recommendation-header h3 {
+  margin: 0;
+  flex: 1;
+  margin-right: 10px;
+}
+
+/* Recipe Detail Header */
+.recipe-title-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.recipe-title-section h1 {
+  margin: 0;
+}
+
+/* Category and Tags */
+.category-tag {
+  display: inline-block;
+  background: #e9ecef;
+  color: #495057;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.category-badge {
+  background: #007bff;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tags-preview {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background: #e7f3ff;
+  color: #0066cc;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+/* Recipe Meta Large */
+.recipe-meta-large {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.prep-time-large,
+.cook-time {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.instructions-text {
+  white-space: pre-line;
+  line-height: 1.6;
+  color: #495057;
+}
+
+/* No Favorites/Recommendations */
+.no-favorites,
+.no-recommendations {
+  text-align: center;
+  padding: 30px 20px;
+  color: #6c757d;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px dashed #dee2e6;
+}
+
+.no-favorites p,
+.no-recommendations p {
+  margin: 5px 0;
+}
+
+/* Remove Favorite Button in Favorites List */
+.btn-favorite-remove:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .favorites-grid,
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .recipe-meta-large {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .recipe-title-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
