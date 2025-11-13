@@ -32,4 +32,64 @@ function App() {
   )
 }
 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { UserProvider } from './context/UserContext'
+import RecipeList from './components/RecipeList'
+import AddRecipeForm from './components/AddRecipeForm'
+import RecipeDetail from './components/RecipeDetail'
+import EditRecipeForm from './components/EditRecipeForm'
+import SearchBar from './components/SearchBar'
+import FilterPanel from './components/FilterPanel'
+import FavoritesList from './components/FavoritesList'
+import RecommendationsList from './components/RecommendationsList'
+import UserProfile from './components/UserProfile'
+import LoginForm from './components/LoginForm'
+import './App.css'
+
+function App() {
+  return (
+    <UserProvider>
+      <Router>
+        <div className="app">
+          <header className="app-header">
+            <div className="header-content">
+              <h1>Recipe Sharing App</h1>
+              <nav className="main-nav">
+                <a href="/" className="nav-link">Home</a>
+                <a href="/#profile" className="nav-link">Profile</a>
+              </nav>
+            </div>
+          </header>
+          <main className="app-main">
+            <Routes>
+              <Route path="/" element={
+                <div className="app-layout">
+                  <div className="sidebar">
+                    <LoginForm />
+                    <AddRecipeForm />
+                    <FilterPanel />
+                    <FavoritesList />
+                  </div>
+                  <div className="main-content">
+                    <SearchBar />
+                    <RecommendationsList />
+                    <RecipeList />
+                  </div>
+                </div>
+              } />
+              <Route path="/recipe/:id" element={<RecipeDetail />} />
+              <Route path="/edit-recipe/:id" element={<EditRecipeForm />} />
+              <Route path="/profile" element={
+                <div className="profile-page">
+                  <UserProfile />
+                </div>
+              } />
+            </Routes>
+          </main>
+        </div>
+      </Router>
+    </UserProvider>
+  )
+}
+
 export default App
