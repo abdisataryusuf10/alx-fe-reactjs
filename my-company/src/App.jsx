@@ -138,4 +138,27 @@ function App() {
     </div>
   );
 }
+
+import React from 'react';
+import Navbar from './components/Navbar'; // Add this import
+import Contact from './components/Contact';
+import AddRecipeForm from './components/AddRecipeForm';
+import RecipeList from './components/RecipeList';
+
+function App() {
+  return (
+    <div className="app">
+      <Navbar /> {/* Add Navbar component */}
+      <header className="app-header">
+        <h1>Recipe Sharing App</h1>
+      </header>
+      <main className="app-main">
+        <Contact />
+        <AddRecipeForm />
+        <RecipeList />
+      </main>
+    </div>
+  );
+}
 export default App;
+
