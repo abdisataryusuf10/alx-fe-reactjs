@@ -43,4 +43,35 @@ function App() {
   return <ProfilePage userData={userData} />;
 }
 
+
+// src/App.jsx
+import React from 'react';
+import { UserProvider } from './context/UserContext'; // ✅ Import UserContext Provider
+import Navbar from './components/Navbar';
+import UserProfile from './components/UserProfile';
+import Contact from './components/Contact';
+import AddRecipeForm from './components/AddRecipeForm';
+import RecipeList from './components/RecipeList';
+import './App.css';
+
+function App() {
+  return (
+    // ✅ Wrap components with UserContext.Provider
+    <UserProvider>
+      <div className="app">
+        <Navbar />
+        <header className="app-header">
+          <h1>Recipe Sharing App</h1>
+        </header>
+        <main className="app-main">
+          <UserProfile /> {/* Component that uses context */}
+          <Contact />
+          <AddRecipeForm />
+          <RecipeList />
+        </main>
+      </div>
+    </UserProvider>
+  );
+}
+
 export default App;
