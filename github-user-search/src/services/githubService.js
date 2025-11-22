@@ -354,3 +354,151 @@ export const getUserRepos = async (username) => {
 };
 
 export default githubAPI;
+
+
+import axios from 'axios';
+
+// Create axios instance with base configuration
+const githubAPI = axios.create({
+  baseURL: 'https://api.github.com',
+  headers: {
+    'Accept': 'application/vnd.github.v3+json',
+  },
+});
+
+// Add environment variable for token if needed
+const token = import.meta.env.VITE_APP_GITHUB_API_KEY;
+if (token) {
+  githubAPI.defaults.headers.common['Authorization'] = `token ${token}`;
+}
+
+// Add rate limiting awareness
+githubAPI.interceptors.response.use(
+  (response) => {
+    const remaining = response.headers['x-ratelimit-remaining'];
+    if (remaining && parseInt(remaining) < 5) {
+      console.warn(`GitHub API rate limit low: ${remaining} requests remaining`);
+    }
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 403) {
+      const resetTime = error.response.headers['x-ratelimit-reset'];
+      if (resetTime) {
+        const resetDate = new Date(parseInt(resetTime) * 1000);
+        error.message = `API rate limit exceeded. Resets at ${resetDate.toLocaleTimeString()}`;
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+/**
+ * Fetches user data from GitHub API
+ */
+export const fetchUserData = async (username) => {
+  try {
+    const response = await githubAPI.get(`/users/${username}`);
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 404) {
+      throw new Error('User not found');
+    } else if (error.response?.status === 403) {
+      throw new Error('API rate limit exceeded. Please try again later.');
+    } else {
+      throw new Error('Failed to fetch user data. Please try again.');
+    }
+  }
+};
+
+/**
+ * Advanced search for GitHub users with multiple criteria
+ */
+export const advancedSearchUsers = async (params, page = 1) => {
+  try {
+    const queryParts = ['type:user'];
+    
+    if (params.username?.trim()) {
+      queryParts.push(`${params.username.trim()} in:login`);
+    }
+    if (params.location?.trim()) {
+      queryParts.push(`location:${params.location.trim()}`);
+    }
+    if (params.minRepos?.trim()) {
+      queryParts.push(`repos:>=${params.minRepos.trim()}`);
+    }
+    if (params.language?.trim()) {
+      queryParts.push(`language:${params.language.trim()}`);
+    }
+
+    const query = queryParts.join(' ');
+    const searchParams = new URLSearchParams({
+      q: query,
+      page: page.toString(),
+      per_page: '30'
+    });
+
+    if (params.sort && params.sort !== 'best-match') {
+      searchParams.append('sort', params.sort);
+      searchParams.append('order', params.order || 'desc');
+    }
+
+    const response = await githubAPI.get(`/search/users?${searchParams.toString()}`);
+    
+    if (response.data.items && response.data.items.length > 0) {
+      const usersWithDetails = await Promise.all(
+        response.data.items.map(async (user) => {
+          try {
+            const userDetails = await fetchUserData(user.login);
+            return {
+              ...user,
+              ...userDetails
+            };
+          } catch (error) {
+            // Return basic info if detailed fetch fails
+            return {
+              ...user,
+              public_repos: 0,
+              followers: 0,
+              following: 0
+            };
+          }
+        })
+      );
+      
+      return {
+        ...response.data,
+        items: usersWithDetails
+      };
+    }
+    
+    return {
+      ...response.data,
+      items: []
+    };
+  } catch (error) {
+    if (error.response?.status === 403) {
+      const resetTime = error.response.headers['x-ratelimit-reset'];
+      if (resetTime) {
+        const resetDate = new Date(parseInt(resetTime) * 1000);
+        throw new Error(`GitHub API rate limit exceeded. Resets at ${resetDate.toLocaleTimeString()}`);
+      }
+      throw new Error('GitHub API rate limit exceeded. Please try again in a few minutes.');
+    } else if (error.response?.status === 422) {
+      throw new Error('Invalid search parameters. Please adjust your search criteria.');
+    } else if (error.response?.status === 404) {
+      throw new Error('No users found matching your criteria.');
+    } else {
+      throw new Error('Failed to search users. Please check your connection and try again.');
+    }
+  }
+};
+
+/**
+ * Simple search users by username
+ */
+export const searchUsers = async (query, page = 1) => {
+  return advancedSearchUsers({ username: query }, page);
+};
+
+export default githubAPI;
