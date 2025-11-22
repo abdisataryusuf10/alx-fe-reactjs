@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 const githubAPI = axios.create({
-  baseURL: "https://api.github.com/search/users?/q",
+  baseURL: "https://api.github.com/search/users?q",
   headers: {
     'Accept': 'application/vnd.github.v3+json',
   },
