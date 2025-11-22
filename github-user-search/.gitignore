@@ -1,3 +1,5 @@
+# Production environment variables
+VITE_APP_GITHUB_API_KEY=your_production_token_here_if_needed
 # Logs
 logs
 *.log
