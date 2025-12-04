@@ -1,0 +1,136 @@
+[
+  {
+    "id": 1,
+    "title": "Spaghetti Carbonara",
+    "summary": "A classic Italian pasta dish with eggs, cheese, bacon, and black pepper. Simple yet incredibly delicious.",
+    "image": "https://images.unsplash.com/photo-1598866594230-a7c12756260f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "prepTime": "15 min",
+    "cookTime": "15 min",
+    "difficulty": "Easy",
+    "rating": 4.8
+  },
+  {
+    "id": 2,
+    "title": "Chicken Tikka Masala",
+    "summary": "Chunks of grilled chicken cooked in a smooth, buttery & creamy tomato-based gravy. A British-Indian fusion favorite.",
+    "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "prepTime": "30 min",
+    "cookTime": "40 min",
+    "difficulty": "Medium",
+    "rating": 4.9
+  },
+  {
+    "id": 3,
+    "title": "Classic Beef Burger",
+    "summary": "Juicy beef patty with fresh lettuce, tomato, onion, and special sauce in a toasted bun.",
+    "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "prepTime": "20 min",
+    "cookTime": "10 min",
+    "difficulty": "Easy",
+    "rating": 4.7
+  },
+  {
+    "id": 4,
+    "title": "Vegetable Stir Fry",
+    "summary": "Colorful mix of fresh vegetables quickly cooked in a savory soy-ginger sauce. Healthy and delicious!",
+    "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "prepTime": "15 min",
+    "cookTime": "10 min",
+    "difficulty": "Easy",
+    "rating": 4.5
+  },
+  {
+    "id": 5,
+    "title": "Chocolate Lava Cake",
+    "summary": "Decadent chocolate cake with a molten chocolate center, perfect for special occasions.",
+    "image": "https://images.unsplash.com/photo-1624353365286-3f8d62dadadf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "prepTime": "25 min",
+    "cookTime": "15 min",
+    "difficulty": "Medium",
+    "rating": 4.9
+  },
+  {
+    "id": 6,
+    "title": "Greek Salad",
+    "summary": "Fresh Mediterranean salad with tomatoes, cucumbers, olives, feta cheese, and olive oil dressing.",
+    "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "prepTime": "15 min",
+    "cookTime": "0 min",
+    "difficulty": "Easy",
+    "rating": 4.6
+  }
+]
+[
+  {
+    "id": 1,
+    "title": "Spaghetti Carbonara",
+    "summary": "A classic Italian pasta dish with eggs, cheese, bacon, and black pepper. Simple yet incredibly delicious.",
+    "description": "Authentic Roman spaghetti carbonara made the traditional way with guanciale, pecorino cheese, eggs, and black pepper. This recipe stays true to its roots for an unforgettable pasta experience.",
+    "image": "https://images.unsplash.com/photo-1598866594230-a7c12756260f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
+    "prepTime": "15 min",
+    "cookTime": "15 min",
+    "difficulty": "Easy",
+    "rating": 4.8,
+    "servings": 4
+  },
+  {
+    "id": 2,
+    "title": "Chicken Tikka Masala",
+    "summary": "Chunks of grilled chicken cooked in a smooth, buttery & creamy tomato-based gravy. A British-Indian fusion favorite.",
+    "description": "Creamy, rich, and flavorful chicken tikka masala with tender pieces of marinated chicken in a spiced tomato and cream sauce. Perfect served with naan or rice.",
+    "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "prepTime": "30 min",
+    "cookTime": "40 min",
+    "difficulty": "Medium",
+    "rating": 4.9,
+    "servings": 4
+  },
+  {
+    "id": 3,
+    "title": "Classic Beef Burger",
+    "summary": "Juicy beef patty with fresh lettuce, tomato, onion, and special sauce in a toasted bun.",
+    "description": "The ultimate homemade burger with a perfectly seasoned beef patty, melted cheese, and all the classic toppings. Grill or pan-fry to juicy perfection.",
+    "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "prepTime": "20 min",
+    "cookTime": "10 min",
+    "difficulty": "Easy",
+    "rating": 4.7,
+    "servings": 4
+  },
+  {
+    "id": 4,
+    "title": "Vegetable Stir Fry",
+    "summary": "Colorful mix of fresh vegetables quickly cooked in a savory soy-ginger sauce. Healthy and delicious!",
+    "description": "Quick and healthy vegetable stir-fry packed with colorful veggies in a savory ginger-garlic sauce. Ready in under 30 minutes and completely customizable.",
+    "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "prepTime": "15 min",
+    "cookTime": "10 min",
+    "difficulty": "Easy",
+    "rating": 4.5,
+    "servings": 3
+  },
+  {
+    "id": 5,
+    "title": "Chocolate Lava Cake",
+    "summary": "Decadent chocolate cake with a molten chocolate center, perfect for special occasions.",
+    "description": "Indulgent chocolate lava cakes with a warm, gooey center. Impressive yet surprisingly easy to make. Perfect for date nights or dinner parties.",
+    "image": "https://images.unsplash.com/photo-1624353365286-3f8d62dadadf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "prepTime": "25 min",
+    "cookTime": "15 min",
+    "difficulty": "Medium",
+    "rating": 4.9,
+    "servings": 6
+  },
+  {
+    "id": 6,
+    "title": "Greek Salad",
+    "summary": "Fresh Mediterranean salad with tomatoes, cucumbers, olives, feta cheese, and olive oil dressing.",
+    "description": "Authentic Greek salad with fresh vegetables, Kalamata olives, and creamy feta cheese dressed in extra virgin olive oil and oregano. Simple and refreshing.",
+    "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "prepTime": "15 min",
+    "cookTime": "0 min",
+    "difficulty": "Easy",
+    "rating": 4.6,
+    "servings": 4
+  }
+]

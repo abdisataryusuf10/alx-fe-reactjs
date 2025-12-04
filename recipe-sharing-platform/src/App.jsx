@@ -32,4 +32,79 @@ function App() {
   )
 }
 
-export default App
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import HomePage from './components/HomePage';
+import Footer from './components/Footer';
+
+function App() {
+  return (
+    <Router>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            {/* We'll add more routes later */}
+            <Route path="/recipe/:id" element={<div>Recipe Detail Page Coming Soon</div>} />
+            <Route path="/add-recipe" element={<div>Add Recipe Form Coming Soon</div>} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
+  );
+}
+
+  import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import HomePage from './components/HomePage';
+import RecipeDetail from './components/RecipeDetail';
+import AddRecipeForm from './components/AddRecipeForm';
+import Footer from './components/Footer';
+
+function App() {
+  return (
+    <Router>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/recipe/:id" element={<RecipeDetail />} />
+            <Route path="/add-recipe" element={<AddRecipeForm />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
+  );
+}
+
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import HomePage from './components/HomePage';
+import RecipeDetail from './components/RecipeDetail';
+import AddRecipeForm from './components/AddRecipeForm';
+import Footer from './components/Footer';
+
+function App() {
+  return (
+    <Router>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/recipe/:id" element={<RecipeDetail />} />
+            <Route path="/add-recipe" element={<AddRecipeForm />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
+  );
+}
+
+export default App;
