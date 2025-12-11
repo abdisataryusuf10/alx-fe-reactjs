@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import './Profile.css';
 
 const ProfileSettings = () => {
   const { user, updateUser } = useAuth();
   const [settings, setSettings] = useState({
-    emailNotifications: true,
+    notifications: true,
+    newsletter: false,
     darkMode: false,
-    twoFactorAuth: false,
     language: 'en'
   });
 
@@ -15,13 +14,6 @@ const ProfileSettings = () => {
     setSettings(prev => ({
       ...prev,
       [setting]: !prev[setting]
-    }));
-  };
-
-  const handleSelectChange = (e) => {
-    setSettings(prev => ({
-      ...prev,
-      language: e.target.value
     }));
   };
 
@@ -36,27 +28,36 @@ const ProfileSettings = () => {
       
       <div className="settings-card">
         <div className="settings-section">
-          <h3>Account Settings</h3>
+          <h3>Notification Settings</h3>
           <div className="setting-item">
-            <div className="setting-info">
-              <span className="setting-label">Email Notifications</span>
-              <span className="setting-description">Receive email updates</span>
-            </div>
+            <span className="setting-label">Email Notifications</span>
             <label className="switch">
               <input
                 type="checkbox"
-                checked={settings.emailNotifications}
-                onChange={() => handleToggle('emailNotifications')}
+                checked={settings.notifications}
+                onChange={() => handleToggle('notifications')}
               />
               <span className="slider"></span>
             </label>
           </div>
-
+          
           <div className="setting-item">
-            <div className="setting-info">
-              <span className="setting-label">Dark Mode</span>
-              <span className="setting-description">Toggle dark theme</span>
-            </div>
+            <span className="setting-label">Newsletter</span>
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={settings.newsletter}
+                onChange={() => handleToggle('newsletter')}
+              />
+              <span className="slider"></span>
+            </label>
+          </div>
+        </div>
+        
+        <div className="settings-section">
+          <h3>Appearance</h3>
+          <div className="setting-item">
+            <span className="setting-label">Dark Mode</span>
             <label className="switch">
               <input
                 type="checkbox"
@@ -66,60 +67,33 @@ const ProfileSettings = () => {
               <span className="slider"></span>
             </label>
           </div>
-
+          
           <div className="setting-item">
-            <div className="setting-info">
-              <span className="setting-label">Two-Factor Authentication</span>
-              <span className="setting-description">Extra security layer</span>
-            </div>
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={settings.twoFactorAuth}
-                onChange={() => handleToggle('twoFactorAuth')}
-              />
-              <span className="slider"></span>
-            </label>
-          </div>
-        </div>
-
-        <div className="settings-section">
-          <h3>Preferences</h3>
-          <div className="setting-item">
-            <div className="setting-info">
-              <span className="setting-label">Language</span>
-              <span className="setting-description">Interface language</span>
-            </div>
+            <span className="setting-label">Language</span>
             <select
               value={settings.language}
-              onChange={handleSelectChange}
+              onChange={(e) => setSettings({...settings, language: e.target.value})}
               className="language-select"
             >
               <option value="en">English</option>
-              <option value="es">Español</option>
-              <option value="fr">Français</option>
-              <option value="de">Deutsch</option>
+              <option value="es">Spanish</option>
+              <option value="fr">French</option>
             </select>
           </div>
         </div>
-
+        
         <div className="settings-actions">
-          <button className="save-btn" onClick={handleSave}>
-            Save Changes
-          </button>
-          <button className="reset-btn" onClick={() => setSettings({
-            emailNotifications: true,
-            darkMode: false,
-            twoFactorAuth: false,
-            language: 'en'
-          })}>
-            Reset to Defaults
+          <button onClick={handleSave} className="save-btn">
+            Save Settings
           </button>
         </div>
       </div>
-
-      <div className="navigation-hint">
-        <p>🔧 These settings are saved in the Auth Context</p>
+      
+      <div className="nested-route-info">
+        <p>
+          <strong>💡 This is another nested route!</strong> This component is also 
+          rendered inside the Profile component's Outlet. The URL is /profile/settings.
+        </p>
       </div>
     </div>
   );

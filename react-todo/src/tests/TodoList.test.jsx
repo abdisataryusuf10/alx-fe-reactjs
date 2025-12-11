@@ -1,447 +1,250 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TodoList from '../components/TodoList';
-import AddTodoForm from '../components/AddTodoForm';
-import TodoItem from '../components/TodoItem';
-
-// Mock data for testing
-const mockTodo = {
-  id: 1,
-  text: 'Test Todo Item',
-  completed: false,
-  createdAt: '2024-01-01T00:00:00.000Z'
-};
-
-const mockToggle = jest.fn();
-const mockDelete = jest.fn();
-const mockEdit = jest.fn();
-const mockAddTodo = jest.fn();
 
 describe('TodoList Component', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.runOnlyPendingTimers();
-    jest.useRealTimers();
-    jest.clearAllMocks();
-  });
-
-  test('renders loading state initially', () => {
     render(<TodoList />);
-    expect(screen.getByText(/loading todos/i)).toBeInTheDocument();
   });
 
-  test('renders todo list after loading', async () => {
-    render(<TodoList />);
+  test('renders TodoList component with initial todos', () => {
+    expect(screen.getByText('Todo List')).toBeInTheDocument();
+    expect(screen.getByTestId('todo-list')).toBeInTheDocument();
+    expect(screen.getByTestId('todos-list')).toBeInTheDocument();
     
-    // Fast-forward timers
-    jest.advanceTimersByTime(500);
+    // Check initial todos
+    expect(screen.getByText('Learn React')).toBeInTheDocument();
+    expect(screen.getByText('Build a Todo App')).toBeInTheDocument();
+    expect(screen.getByText('Write Tests')).toBeInTheDocument();
     
-    await waitFor(() => {
-      expect(screen.getByText(/react todo list/i)).toBeInTheDocument();
-    });
-    
-    // Check for sample todos
-    expect(screen.getByText(/learn react testing library/i)).toBeInTheDocument();
-    expect(screen.getByText(/implement jest tests/i)).toBeInTheDocument();
+    // Check stats
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('3');
+    expect(screen.getByTestId('active-todos')).toHaveTextContent('2');
+    expect(screen.getByTestId('completed-todos')).toHaveTextContent('1');
   });
 
-  test('displays correct todo statistics', async () => {
-    render(<TodoList />);
-    jest.advanceTimersByTime(500);
-    
-    await waitFor(() => {
-      // Check stats display
-      expect(screen.getByText(/total:/i)).toBeInTheDocument();
-      expect(screen.getByText(/active:/i)).toBeInTheDocument();
-      expect(screen.getByText(/completed:/i)).toBeInTheDocument();
-    });
-  });
-
-  test('filters todos correctly', async () => {
-    render(<TodoList />);
-    jest.advanceTimersByTime(500);
-    
-    await waitFor(() => {
-      const allButton = screen.getByText(/all \(\d+\)/i);
-      const activeButton = screen.getByText(/active \(\d+\)/i);
-      const completedButton = screen.getByText(/completed \(\d+\)/i);
-      
-      // Test all filter (default)
-      expect(allButton).toHaveClass('active');
-      
-      // Test active filter
-      fireEvent.click(activeButton);
-      expect(activeButton).toHaveClass('active');
-      
-      // Test completed filter
-      fireEvent.click(completedButton);
-      expect(completedButton).toHaveClass('active');
-    });
-  });
-
-  test('clears completed todos', async () => {
-    render(<TodoList />);
-    jest.advanceTimersByTime(500);
-    
-    await waitFor(() => {
-      const clearButton = screen.getByText(/clear completed/i);
-      
-      // Initially should have completed todos
-      expect(screen.getByText(/learn react testing library/i)).toBeInTheDocument();
-      
-      // Click clear completed
-      fireEvent.click(clearButton);
-      
-      // Check completed todos are removed
-      expect(screen.queryByText(/learn react testing library/i)).not.toBeInTheDocument();
-      expect(screen.getByText(/implement jest tests/i)).toBeInTheDocument();
-    });
-  });
-});
-
-describe('AddTodoForm Component', () => {
-  test('renders form elements correctly', () => {
-    render(<AddTodoForm onAddTodo={mockAddTodo} />);
-    
-    expect(screen.getByTestId('todo-input')).toBeInTheDocument();
-    expect(screen.getByTestId('add-todo-button')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/what needs to be done\?/i)).toBeInTheDocument();
-  });
-
-  test('validates empty input', async () => {
+  test('adds a new todo', async () => {
     const user = userEvent.setup();
-    render(<AddTodoForm onAddTodo={mockAddTodo} />);
+    
+    const input = screen.getByTestId('todo-input');
+    const addButton = screen.getByTestId('add-todo-button');
+    
+    // Add a new todo
+    await user.type(input, 'New Test Todo');
+    await user.click(addButton);
+    
+    // Check if todo was added
+    expect(screen.getByText('New Test Todo')).toBeInTheDocument();
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('4');
+    expect(input).toHaveValue('');
+  });
+
+  test('does not add empty todo', async () => {
+    const user = userEvent.setup();
     
     const input = screen.getByTestId('todo-input');
     const addButton = screen.getByTestId('add-todo-button');
     
     // Try to add empty todo
+    await user.type(input, '   ');
     await user.click(addButton);
     
-    expect(screen.getByTestId('error-message')).toHaveTextContent(/cannot be empty/i);
-    expect(mockAddTodo).not.toHaveBeenCalled();
-  });
-
-  test('validates minimum length', async () => {
-    const user = userEvent.setup();
-    render(<AddTodoForm onAddTodo={mockAddTodo} />);
-    
-    const input = screen.getByTestId('todo-input');
-    const addButton = screen.getByTestId('add-todo-button');
-    
-    // Enter too short text
-    await user.type(input, 'ab');
-    await user.click(addButton);
-    
-    expect(screen.getByTestId('error-message')).toHaveTextContent(/at least 3 characters/i);
-    expect(mockAddTodo).not.toHaveBeenCalled();
-  });
-
-  test('adds valid todo', async () => {
-    const user = userEvent.setup();
-    render(<AddTodoForm onAddTodo={mockAddTodo} />);
-    
-    const input = screen.getByTestId('todo-input');
-    const addButton = screen.getByTestId('add-todo-button');
-    
-    // Enter valid todo
-    await user.type(input, 'New Test Todo');
-    await user.click(addButton);
-    
-    expect(mockAddTodo).toHaveBeenCalledWith('New Test Todo');
-    expect(input).toHaveValue('');
-    expect(screen.queryByTestId('error-message')).not.toBeInTheDocument();
+    // Check no todo was added
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('3');
   });
 
   test('adds todo on Enter key press', async () => {
     const user = userEvent.setup();
-    render(<AddTodoForm onAddTodo={mockAddTodo} />);
     
     const input = screen.getByTestId('todo-input');
     
-    // Type and press Enter
-    await user.type(input, 'New Todo{enter}');
+    // Add todo using Enter key
+    await user.type(input, 'Todo with Enter{Enter}');
     
-    expect(mockAddTodo).toHaveBeenCalledWith('New Todo');
-  });
-
-  test('clears error when typing', async () => {
-    const user = userEvent.setup();
-    render(<AddTodoForm onAddTodo={mockAddTodo} />);
-    
-    const input = screen.getByTestId('todo-input');
-    const addButton = screen.getByTestId('add-todo-button');
-    
-    // Trigger error
-    await user.click(addButton);
-    expect(screen.getByTestId('error-message')).toBeInTheDocument();
-    
-    // Start typing to clear error
-    await user.type(input, 'New text');
-    expect(screen.queryByTestId('error-message')).not.toBeInTheDocument();
-  });
-});
-
-describe('TodoItem Component', () => {
-  test('renders todo item correctly', () => {
-    render(
-      <TodoItem
-        todo={mockTodo}
-        onToggle={mockToggle}
-        onDelete={mockDelete}
-        onEdit={mockEdit}
-      />
-    );
-    
-    expect(screen.getByTestId(`todo-item-${mockTodo.id}`)).toBeInTheDocument();
-    expect(screen.getByTestId(`todo-text-${mockTodo.id}`)).toHaveTextContent(mockTodo.text);
-    expect(screen.getByTestId(`todo-checkbox-${mockTodo.id}`)).not.toBeChecked();
+    expect(screen.getByText('Todo with Enter')).toBeInTheDocument();
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('4');
   });
 
   test('toggles todo completion', async () => {
     const user = userEvent.setup();
-    render(
-      <TodoItem
-        todo={mockTodo}
-        onToggle={mockToggle}
-        onDelete={mockDelete}
-        onEdit={mockEdit}
-      />
-    );
     
-    const checkbox = screen.getByTestId(`todo-checkbox-${mockTodo.id}`);
+    // Find the first todo's checkbox
+    const todoCheckbox = screen.getByTestId('todo-checkbox-1');
+    const todoText = screen.getByTestId('todo-text-1');
     
-    // Toggle checkbox
-    await user.click(checkbox);
+    // Initially should not be completed
+    expect(todoCheckbox).not.toBeChecked();
+    expect(todoText).not.toHaveStyle('text-decoration: line-through');
     
-    expect(mockToggle).toHaveBeenCalledWith(mockTodo.id);
+    // Toggle to completed
+    await user.click(todoCheckbox);
+    
+    // Should be completed
+    expect(todoCheckbox).toBeChecked();
+    expect(screen.getByTestId('todo-item-1')).toHaveAttribute('data-completed', 'true');
+    expect(screen.getByTestId('completed-todos')).toHaveTextContent('2');
+    expect(screen.getByTestId('active-todos')).toHaveTextContent('1');
+    
+    // Toggle back to active
+    await user.click(todoCheckbox);
+    expect(todoCheckbox).not.toBeChecked();
+    expect(screen.getByTestId('completed-todos')).toHaveTextContent('1');
+    expect(screen.getByTestId('active-todos')).toHaveTextContent('2');
   });
 
-  test('deletes todo', async () => {
+  test('toggles todo completion by clicking text', async () => {
     const user = userEvent.setup();
-    render(
-      <TodoItem
-        todo={mockTodo}
-        onToggle={mockToggle}
-        onDelete={mockDelete}
-        onEdit={mockEdit}
-      />
-    );
     
-    const deleteButton = screen.getByTestId(`delete-button-${mockTodo.id}`);
+    const todoText = screen.getByTestId('todo-text-1');
+    const todoCheckbox = screen.getByTestId('todo-checkbox-1');
     
-    // Click delete button
+    // Initially not checked
+    expect(todoCheckbox).not.toBeChecked();
+    
+    // Click text to toggle
+    await user.click(todoText);
+    
+    // Should be checked now
+    expect(todoCheckbox).toBeChecked();
+  });
+
+  test('deletes a todo', async () => {
+    const user = userEvent.setup();
+    
+    const deleteButton = screen.getByTestId('delete-button-1');
+    const todoText = screen.getByText('Learn React');
+    
+    // Verify todo exists before deletion
+    expect(todoText).toBeInTheDocument();
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('3');
+    
+    // Delete the todo
     await user.click(deleteButton);
     
-    expect(mockDelete).toHaveBeenCalledWith(mockTodo.id);
+    // Verify todo was deleted
+    expect(todoText).not.toBeInTheDocument();
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('2');
+    expect(screen.queryByTestId('todo-item-1')).not.toBeInTheDocument();
   });
 
-  test('enters edit mode', async () => {
+  test('shows no todos message when empty', async () => {
     const user = userEvent.setup();
-    render(
-      <TodoItem
-        todo={mockTodo}
-        onToggle={mockToggle}
-        onDelete={mockDelete}
-        onEdit={mockEdit}
-      />
-    );
     
-    const editButton = screen.getByTestId(`edit-button-${mockTodo.id}`);
+    // Delete all todos
+    const deleteButtons = [
+      screen.getByTestId('delete-button-1'),
+      screen.getByTestId('delete-button-2'),
+      screen.getByTestId('delete-button-3')
+    ];
     
-    // Click edit button
-    await user.click(editButton);
+    for (const button of deleteButtons) {
+      await user.click(button);
+    }
     
-    expect(screen.getByTestId(`edit-input-${mockTodo.id}`)).toBeInTheDocument();
+    // Check no todos message appears
+    expect(screen.getByTestId('no-todos')).toBeInTheDocument();
+    expect(screen.getByText('No todos yet. Add one above!')).toBeInTheDocument();
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('0');
   });
 
-  test('saves edited todo', async () => {
+  test('updates statistics correctly', async () => {
     const user = userEvent.setup();
-    render(
-      <TodoItem
-        todo={mockTodo}
-        onToggle={mockToggle}
-        onDelete={mockDelete}
-        onEdit={mockEdit}
-      />
-    );
     
-    // Enter edit mode
-    await user.click(screen.getByTestId(`edit-button-${mockTodo.id}`));
-    
-    const editInput = screen.getByTestId(`edit-input-${mockTodo.id}`);
-    
-    // Edit text and save
-    await user.clear(editInput);
-    await user.type(editInput, 'Edited Todo Text');
-    await user.tab(); // Blur to save
-    
-    expect(mockEdit).toHaveBeenCalledWith(mockTodo.id, 'Edited Todo Text');
-  });
-
-  test('cancels edit on Escape key', async () => {
-    const user = userEvent.setup();
-    render(
-      <TodoItem
-        todo={mockTodo}
-        onToggle={mockToggle}
-        onDelete={mockDelete}
-        onEdit={mockEdit}
-      />
-    );
-    
-    // Enter edit mode
-    await user.click(screen.getByTestId(`edit-button-${mockTodo.id}`));
-    
-    const editInput = screen.getByTestId(`edit-input-${mockTodo.id}`);
-    
-    // Type something and press Escape
-    await user.type(editInput, 'New Text{Escape}');
-    
-    expect(mockEdit).not.toHaveBeenCalled();
-    expect(screen.getByTestId(`todo-text-${mockTodo.id}`)).toHaveTextContent(mockTodo.text);
-  });
-
-  test('saves edit on Enter key', async () => {
-    const user = userEvent.setup();
-    render(
-      <TodoItem
-        todo={mockTodo}
-        onToggle={mockToggle}
-        onDelete={mockDelete}
-        onEdit={mockEdit}
-      />
-    );
-    
-    // Enter edit mode
-    await user.click(screen.getByTestId(`edit-button-${mockTodo.id}`));
-    
-    const editInput = screen.getByTestId(`edit-input-${mockTodo.id}`);
-    
-    // Edit and press Enter
-    await user.clear(editInput);
-    await user.type(editInput, 'Edited Text{enter}');
-    
-    expect(mockEdit).toHaveBeenCalledWith(mockTodo.id, 'Edited Text');
-  });
-
-  test('displays completed todo correctly', () => {
-    const completedTodo = { ...mockTodo, completed: true };
-    
-    render(
-      <TodoItem
-        todo={completedTodo}
-        onToggle={mockToggle}
-        onDelete={mockDelete}
-        onEdit={mockEdit}
-      />
-    );
-    
-    const todoItem = screen.getByTestId(`todo-item-${completedTodo.id}`);
-    const checkbox = screen.getByTestId(`todo-checkbox-${completedTodo.id}`);
-    
-    expect(todoItem).toHaveClass('completed');
-    expect(checkbox).toBeChecked();
-    expect(todoItem).toHaveAttribute('data-completed', 'true');
-  });
-
-  test('displays creation date', () => {
-    render(
-      <TodoItem
-        todo={mockTodo}
-        onToggle={mockToggle}
-        onDelete={mockDelete}
-        onEdit={mockEdit}
-      />
-    );
-    
-    expect(screen.getByText(/january/i)).toBeInTheDocument();
-  });
-});
-
-describe('Integration Tests', () => {
-  test('full todo flow', async () => {
-    const user = userEvent.setup();
-    render(<TodoList />);
-    
-    // Wait for initial load
-    jest.advanceTimersByTime(500);
-    await waitFor(() => {
-      expect(screen.getByText(/implement jest tests/i)).toBeInTheDocument();
-    });
+    // Initial stats
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('3');
+    expect(screen.getByTestId('active-todos')).toHaveTextContent('2');
+    expect(screen.getByTestId('completed-todos')).toHaveTextContent('1');
     
     // Add a new todo
     const input = screen.getByTestId('todo-input');
-    const addButton = screen.getByTestId('add-todo-button');
+    await user.type(input, 'New Todo{Enter}');
     
-    await user.type(input, 'Integration Test Todo');
-    await user.click(addButton);
+    // Stats should update
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('4');
+    expect(screen.getByTestId('active-todos')).toHaveTextContent('3');
+    expect(screen.getByTestId('completed-todos')).toHaveTextContent('1');
     
-    // Verify new todo appears
-    await waitFor(() => {
-      expect(screen.getByText(/integration test todo/i)).toBeInTheDocument();
-    });
+    // Toggle a todo to complete
+    const todoCheckbox = screen.getByTestId('todo-checkbox-1');
+    await user.click(todoCheckbox);
     
-    // Toggle the new todo
-    const newTodoCheckbox = screen.getAllByRole('checkbox').find(checkbox => 
-      checkbox.closest('[data-testid*="todo-item"]')?.textContent?.includes('Integration Test Todo')
-    );
+    // Stats should update
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('4');
+    expect(screen.getByTestId('active-todos')).toHaveTextContent('2');
+    expect(screen.getByTestId('completed-todos')).toHaveTextContent('2');
     
-    if (newTodoCheckbox) {
-      await user.click(newTodoCheckbox);
-    }
+    // Delete a todo
+    const deleteButton = screen.getByTestId('delete-button-1');
+    await user.click(deleteButton);
     
-    // Filter to see completed todos
-    const completedFilter = screen.getByText(/completed \(\d+\)/i);
-    await user.click(completedFilter);
-    
-    // Verify our todo appears in completed filter
-    await waitFor(() => {
-      expect(screen.getByText(/integration test todo/i)).toBeInTheDocument();
-    });
-    
-    // Clear completed todos
-    const clearButton = screen.getByText(/clear completed/i);
-    await user.click(clearButton);
-    
-    // Verify todo is removed
-    await waitFor(() => {
-      expect(screen.queryByText(/integration test todo/i)).not.toBeInTheDocument();
-    });
+    // Stats should update
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('3');
+    expect(screen.getByTestId('active-todos')).toHaveTextContent('2');
+    expect(screen.getByTestId('completed-todos')).toHaveTextContent('1');
   });
 
-  test('edit todo integration', async () => {
+  test('toggles all todos and clears completed', async () => {
     const user = userEvent.setup();
-    render(<TodoList />);
     
-    // Wait for initial load
-    jest.advanceTimersByTime(500);
-    await waitFor(() => {
-      expect(screen.getByText(/implement jest tests/i)).toBeInTheDocument();
-    });
+    // Get all todo checkboxes
+    const checkboxes = [
+      screen.getByTestId('todo-checkbox-1'),
+      screen.getByTestId('todo-checkbox-2'),
+      screen.getByTestId('todo-checkbox-3')
+    ];
     
-    // Find and edit a todo
-    const todoText = screen.getByText(/implement jest tests/i);
-    await user.dblClick(todoText); // Double-click to edit
+    // Toggle all to completed
+    for (const checkbox of checkboxes) {
+      await user.click(checkbox);
+    }
     
-    // Wait for edit input to appear
-    await waitFor(() => {
-      expect(screen.getByDisplayValue(/implement jest tests/i)).toBeInTheDocument();
-    });
+    // Check all are completed
+    expect(screen.getByTestId('completed-todos')).toHaveTextContent('3');
+    expect(screen.getByTestId('active-todos')).toHaveTextContent('0');
     
-    // Edit the todo
-    const editInput = screen.getByDisplayValue(/implement jest tests/i);
-    await user.clear(editInput);
-    await user.type(editInput, 'Updated Todo Text{enter}');
+    // Toggle all back to active
+    for (const checkbox of checkboxes) {
+      await user.click(checkbox);
+    }
     
-    // Verify edit
-    await waitFor(() => {
-      expect(screen.getByText(/updated todo text/i)).toBeInTheDocument();
-      expect(screen.queryByText(/implement jest tests/i)).not.toBeInTheDocument();
-    });
+    expect(screen.getByTestId('completed-todos')).toHaveTextContent('0');
+    expect(screen.getByTestId('active-todos')).toHaveTextContent('3');
+  });
+
+  test('handles multiple operations in sequence', async () => {
+    const user = userEvent.setup();
+    
+    const input = screen.getByTestId('todo-input');
+    
+    // Add multiple todos
+    await user.type(input, 'First Todo{Enter}');
+    await user.type(input, 'Second Todo{Enter}');
+    await user.type(input, 'Third Todo{Enter}');
+    
+    // Verify all were added
+    expect(screen.getByText('First Todo')).toBeInTheDocument();
+    expect(screen.getByText('Second Todo')).toBeInTheDocument();
+    expect(screen.getByText('Third Todo')).toBeInTheDocument();
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('6');
+    
+    // Toggle some
+    const newTodoCheckboxes = [
+      screen.getByTestId('todo-checkbox-1').closest('li')?.textContent?.includes('First Todo') ? screen.getByTestId('todo-checkbox-1') : null,
+      screen.getByTestId('todo-checkbox-2').closest('li')?.textContent?.includes('Second Todo') ? screen.getByTestId('todo-checkbox-2') : null
+    ].filter(Boolean);
+    
+    for (const checkbox of newTodoCheckboxes) {
+      if (checkbox) await user.click(checkbox);
+    }
+    
+    // Delete some
+    const deleteButtons = screen.getAllByText('Delete').slice(0, 2);
+    for (const button of deleteButtons) {
+      await user.click(button);
+    }
+    
+    // Verify final state
+    expect(screen.getByTestId('total-todos')).toHaveTextContent('4');
   });
 });

@@ -9,7 +9,7 @@ const Layout = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate('/login');
   };
 
   return (
@@ -46,24 +46,19 @@ const Layout = () => {
         </div>
       </nav>
 
-      <div className="breadcrumb">
-        <nav aria-label="breadcrumb">
-          <ol>
-            <li><Link to="/">Home</Link></li>
-            {/* Dynamic breadcrumbs would go here */}
-          </ol>
-        </nav>
-      </div>
-
       <main className="main-content">
         <Outlet />
       </main>
 
       <footer className="footer">
-        <p>Advanced Routing Demo • Nested Routes • Protected Routes • Dynamic Routes</p>
-        <div className="route-info">
-          <span className="info-item">👤 Authentication: {user ? 'Logged In' : 'Guest'}</span>
-          <span className="info-item">📍 Current Route: {window.location.pathname}</span>
+        <p>Advanced Routing Demo • React Router v6 • Authentication</p>
+        <div className="route-status">
+          <span className="status-item">
+            Authentication: {user ? '✅ Logged In' : '🔒 Guest'}
+          </span>
+          <span className="status-item">
+            Current Route: {window.location.pathname}
+          </span>
         </div>
       </footer>
     </div>

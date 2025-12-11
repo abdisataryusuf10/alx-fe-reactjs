@@ -1,190 +1,143 @@
-import React, { useState, useEffect } from 'react';
-import AddTodoForm from './AddTodoForm';
-import TodoItem from './TodoItem';
+import React, { useState } from 'react';
 import './TodoList.css';
 
 const TodoList = () => {
-  const [todos, setTodos] = useState([]);
-  const [filter, setFilter] = useState('all'); // all, active, completed
-  const [loading, setLoading] = useState(true);
+  const [todos, setTodos] = useState([
+    { id: 1, text: 'Learn React', completed: false },
+    { id: 2, text: 'Build a Todo App', completed: true },
+    { id: 3, text: 'Write Tests', completed: false }
+  ]);
+  const [inputValue, setInputValue] = useState('');
 
-  // Initialize with sample todos
-  useEffect(() => {
-    const sampleTodos = [
-      { id: 1, text: 'Learn React Testing Library', completed: true },
-      { id: 2, text: 'Implement Jest tests', completed: false },
-      { id: 3, text: 'Build Todo App', completed: true },
-      { id: 4, text: 'Write component tests', completed: false },
-    ];
+  const handleAddTodo = () => {
+    if (inputValue.trim() === '') return;
     
-    // Simulate API call
-    setTimeout(() => {
-      setTodos(sampleTodos);
-      setLoading(false);
-    }, 500);
-  }, []);
-
-  const addTodo = (text) => {
     const newTodo = {
       id: Date.now(),
-      text,
-      completed: false,
-      createdAt: new Date().toISOString()
+      text: inputValue,
+      completed: false
     };
+    
     setTodos([...todos, newTodo]);
+    setInputValue('');
   };
 
-  const toggleTodo = (id) => {
+  const handleToggleTodo = (id) => {
     setTodos(todos.map(todo =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ));
   };
 
-  const deleteTodo = (id) => {
+  const handleDeleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const editTodo = (id, newText) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, text: newText } : todo
-    ));
-  };
-
-  const clearCompleted = () => {
-    setTodos(todos.filter(todo => !todo.completed));
-  };
-
-  const getFilteredTodos = () => {
-    switch (filter) {
-      case 'active':
-        return todos.filter(todo => !todo.completed);
-      case 'completed':
-        return todos.filter(todo => todo.completed);
-      default:
-        return todos;
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleAddTodo();
     }
   };
 
-  const getStats = () => {
-    const total = todos.length;
-    const completed = todos.filter(todo => todo.completed).length;
-    const active = total - completed;
-    return { total, completed, active };
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
   };
 
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p>Loading todos...</p>
-      </div>
-    );
-  }
+  const getCompletedCount = () => {
+    return todos.filter(todo => todo.completed).length;
+  };
 
-  const filteredTodos = getFilteredTodos();
-  const stats = getStats();
+  const getActiveCount = () => {
+    return todos.filter(todo => !todo.completed).length;
+  };
 
   return (
-    <div className="todo-app">
-      <header className="app-header">
-        <h1>📝 React Todo List</h1>
-        <p className="subtitle">Advanced Todo App with Testing</p>
-      </header>
+    <div className="todo-list-container" data-testid="todo-list">
+      <h1>Todo List</h1>
+      <p className="subtitle">A simple todo list component with testing</p>
+      
+      <div className="add-todo-form">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyPress={handleKeyPress}
+          placeholder="Add a new todo..."
+          className="todo-input"
+          data-testid="todo-input"
+        />
+        <button 
+          onClick={handleAddTodo} 
+          className="add-button"
+          data-testid="add-todo-button"
+        >
+          Add Todo
+        </button>
+      </div>
 
-      <div className="todo-container">
-        <AddTodoForm onAddTodo={addTodo} />
-        
-        <div className="filters">
-          <button
-            onClick={() => setFilter('all')}
-            className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-          >
-            All ({stats.total})
-          </button>
-          <button
-            onClick={() => setFilter('active')}
-            className={`filter-btn ${filter === 'active' ? 'active' : ''}`}
-          >
-            Active ({stats.active})
-          </button>
-          <button
-            onClick={() => setFilter('completed')}
-            className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
-          >
-            Completed ({stats.completed})
-          </button>
+      <div className="todo-stats">
+        <div className="stat">
+          <span className="stat-label">Total:</span>
+          <span className="stat-value" data-testid="total-todos">{todos.length}</span>
         </div>
-
-        <div className="stats-bar">
-          <div className="stat-item">
-            <span className="stat-label">Total:</span>
-            <span className="stat-value">{stats.total}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Active:</span>
-            <span className="stat-value">{stats.active}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Completed:</span>
-            <span className="stat-value">{stats.completed}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Completion:</span>
-            <span className="stat-value">
-              {stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0}%
-            </span>
-          </div>
+        <div className="stat">
+          <span className="stat-label">Active:</span>
+          <span className="stat-value" data-testid="active-todos">{getActiveCount()}</span>
         </div>
-
-        <div className="todo-list">
-          {filteredTodos.length === 0 ? (
-            <div className="empty-state">
-              <p className="empty-message">
-                {filter === 'all' 
-                  ? 'No todos yet. Add one above!'
-                  : filter === 'active'
-                  ? 'No active todos. Great job!'
-                  : 'No completed todos yet.'}
-              </p>
-            </div>
-          ) : (
-            filteredTodos.map(todo => (
-              <TodoItem
-                key={todo.id}
-                todo={todo}
-                onToggle={toggleTodo}
-                onDelete={deleteTodo}
-                onEdit={editTodo}
-              />
-            ))
-          )}
+        <div className="stat">
+          <span className="stat-label">Completed:</span>
+          <span className="stat-value" data-testid="completed-todos">{getCompletedCount()}</span>
         </div>
+      </div>
 
-        <div className="actions-bar">
-          <button 
-            onClick={clearCompleted}
-            disabled={stats.completed === 0}
-            className="clear-btn"
-          >
-            Clear Completed
-          </button>
-          <span className="hint">
-            💡 Try interacting with todos to see the functionality
-          </span>
-        </div>
-
-        <div className="testing-info">
-          <h3>Testing Features Implemented:</h3>
-          <ul>
-            <li>✅ Add new todos</li>
-            <li>✅ Toggle completion status</li>
-            <li>✅ Edit todo text</li>
-            <li>✅ Delete individual todos</li>
-            <li>✅ Filter by status</li>
-            <li>✅ Clear completed todos</li>
-            <li>✅ Statistics display</li>
+      <div className="todos-container">
+        {todos.length === 0 ? (
+          <p className="no-todos" data-testid="no-todos">No todos yet. Add one above!</p>
+        ) : (
+          <ul className="todos-list" data-testid="todos-list">
+            {todos.map(todo => (
+              <li 
+                key={todo.id} 
+                className={`todo-item ${todo.completed ? 'completed' : ''}`}
+                data-testid={`todo-item-${todo.id}`}
+                data-completed={todo.completed}
+              >
+                <div className="todo-content">
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    onChange={() => handleToggleTodo(todo.id)}
+                    className="todo-checkbox"
+                    data-testid={`todo-checkbox-${todo.id}`}
+                  />
+                  <span 
+                    className="todo-text"
+                    data-testid={`todo-text-${todo.id}`}
+                    onClick={() => handleToggleTodo(todo.id)}
+                  >
+                    {todo.text}
+                  </span>
+                </div>
+                <button
+                  onClick={() => handleDeleteTodo(todo.id)}
+                  className="delete-button"
+                  data-testid={`delete-button-${todo.id}`}
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
           </ul>
-        </div>
+        )}
+      </div>
+
+      <div className="instructions">
+        <h3>Testing Features:</h3>
+        <ul>
+          <li>✅ Add new todos</li>
+          <li>✅ Toggle todo completion</li>
+          <li>✅ Delete todos</li>
+          <li>✅ Update todo statistics</li>
+        </ul>
       </div>
     </div>
   );

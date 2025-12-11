@@ -9,7 +9,7 @@ const BlogPost = () => {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    // Fetch post details
+    // Fetch post details using the dynamic parameter
     fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`)
       .then(response => response.json())
       .then(data => {
@@ -66,47 +66,58 @@ const BlogPost = () => {
 
         <div className="post-content">
           <p>{post.body}</p>
-          <p className="post-excerpt">
-            This is a dynamically loaded post using the post ID from the URL parameter.
-            The data is fetched from JSONPlaceholder API.
-          </p>
         </div>
 
-        <div className="post-extra">
-          <div className="tags">
-            <span className="tag">Dynamic Routing</span>
-            <span className="tag">API Integration</span>
-            <span className="tag">React Router</span>
+        <div className="dynamic-route-info">
+          <h3>Dynamic Route Information:</h3>
+          <div className="info-grid">
+            <div className="info-item">
+              <span className="info-label">URL Parameter:</span>
+              <code>:postId = {postId}</code>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Full Path:</span>
+              <code>/blog/{postId}</code>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Component:</span>
+              <span>BlogPost</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Hook Used:</span>
+              <code>useParams()</code>
+            </div>
+          </div>
+        </div>
+
+        {comments.length > 0 && (
+          <div className="comments-section">
+            <h3>Comments ({comments.length})</h3>
+            <div className="comments-list">
+              {comments.map(comment => (
+                <div key={comment.id} className="comment">
+                  <div className="comment-header">
+                    <strong>{comment.name}</strong>
+                    <span className="comment-email">{comment.email}</span>
+                  </div>
+                  <p className="comment-body">{comment.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="navigation-links">
+          <h4>Try Dynamic Routing:</h4>
+          <div className="post-links">
+            <Link to="/blog/1" className="post-link">Post 1</Link>
+            <Link to="/blog/2" className="post-link">Post 2</Link>
+            <Link to="/blog/3" className="post-link">Post 3</Link>
+            <Link to="/blog/4" className="post-link">Post 4</Link>
+            <Link to="/blog/5" className="post-link">Post 5</Link>
           </div>
         </div>
       </article>
-
-      {comments.length > 0 && (
-        <div className="comments-section">
-          <h3>Comments ({comments.length})</h3>
-          <div className="comments-list">
-            {comments.map(comment => (
-              <div key={comment.id} className="comment">
-                <div className="comment-header">
-                  <strong>{comment.name}</strong>
-                  <span className="comment-email">{comment.email}</span>
-                </div>
-                <p className="comment-body">{comment.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="dynamic-info">
-        <h4>Dynamic Routing Information:</h4>
-        <ul>
-          <li><strong>URL Parameter (postId):</strong> {postId}</li>
-          <li><strong>Dynamic Path:</strong> /blog/:postId</li>
-          <li><strong>API Endpoint:</strong> https://jsonplaceholder.typicode.com/posts/{postId}</li>
-          <li><strong>Route Type:</strong> Dynamic Route with useParams()</li>
-        </ul>
-      </div>
     </div>
   );
 };
