@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import AddTodoForm from './AddTodoForm';
 import TodoItem from './TodoItem';
+import './TodoList.css';
 
 const TodoList = () => {
   const [todos, setTodos] = useState([
@@ -10,9 +11,11 @@ const TodoList = () => {
   ]);
 
   const addTodo = (text) => {
+    if (!text.trim()) return;
+    
     const newTodo = {
       id: Date.now(),
-      text,
+      text: text.trim(),
       completed: false
     };
     setTodos([...todos, newTodo]);
@@ -38,7 +41,11 @@ const TodoList = () => {
       <AddTodoForm onAddTodo={addTodo} />
       
       <div className="stats">
-        <p>Total: {todos.length} | Completed: {completedTodos.length} | Pending: {incompleteTodos.length}</p>
+        <p data-testid="todo-stats">
+          Total: {todos.length} | 
+          Completed: {completedTodos.length} | 
+          Pending: {incompleteTodos.length}
+        </p>
       </div>
       
       {incompleteTodos.length > 0 && (
