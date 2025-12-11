@@ -1,42 +1,57 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout/Layout';
-import Home from './components/Home';
-import About from './components/About';
-import BlogList from './components/Blog/BlogList';
-import BlogPost from './components/Blog/BlogPost';
-import Profile from './components/Profile/Profile';
-import ProfileDetails from './components/Profile/ProfileDetails';
-import ProfileSettings from './components/Profile/ProfileSettings';
-import Login from './components/Auth/Login';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Layout from './components/Layout';
+import Home from './pages/Home';
+import About from './pages/About';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+import ProfileDetails from './components/ProfileDetails';
+import ProfileSettings from './components/ProfileSettings';
+import Blog from './pages/Blog';
+import BlogPost from './components/BlogPost';
+import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
 import './App.css';
 
 function App() {
-  // In a real app, this would come from authentication context
-  const isAuthenticated = true; // Change to false to test protected route
-
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="blog" element={<BlogList />} />
-          <Route path="blog/:slug" element={<BlogPost />} />
-          <Route path="login" element={<Login />} />
-          
-          <Route path="profile" element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Profile />
-            </ProtectedRoute>
-          }>
-            <Route index element={<ProfileDetails />} />
-            <Route path="details" element={<ProfileDetails />} />
-            <Route path="settings" element={<ProfileSettings />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="about" element={<About />} />
+            <Route path="login" element={<Login />} />
+            
+            {/* Protected Routes */}
+            <Route path="dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            
+            {/* Nested Routes for Profile */}
+            <Route path="profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }>
+              <Route index element={<ProfileDetails />} />
+              <Route path="settings" element={<ProfileSettings />} />
+            </Route>
+            
+            {/* Dynamic Routing for Blog */}
+            <Route path="blog" element={<Blog />} />
+            <Route path="blog/:postId" element={<BlogPost />} />
+            
+            {/* 404 Route */}
+            <Route path="*" element={<NotFound />} />
           </Route>
-        </Route>
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

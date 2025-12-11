@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import './TodoList.css';
 
 const AddTodoForm = ({ onAddTodo }) => {
@@ -8,46 +9,72 @@ const AddTodoForm = ({ onAddTodo }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    if (!inputValue.trim()) {
-      setError('Todo text is required');
+    const trimmedValue = inputValue.trim();
+    
+    if (!trimmedValue) {
+      setError('Todo text cannot be empty');
       return;
     }
     
-    if (inputValue.length > 100) {
-      setError('Todo text must be less than 100 characters');
+    if (trimmedValue.length < 3) {
+      setError('Todo must be at least 3 characters');
       return;
     }
     
-    setError('');
-    onAddTodo(inputValue);
+    onAddTodo(trimmedValue);
     setInputValue('');
+    setError('');
+  };
+
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+    if (error) setError('');
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="add-todo-form" data-testid="add-todo-form">
-      <div className="form-group">
+    <form onSubmit={handleSubmit} className="add-todo-form">
+      <div className="input-group">
         <input
           type="text"
           value={inputValue}
-          onChange={(e) => {
-            setInputValue(e.target.value);
-            setError('');
-          }}
+          onChange={handleChange}
+          onKeyPress={handleKeyPress}
           placeholder="What needs to be done?"
           className="todo-input"
+          aria-label="Add new todo"
           data-testid="todo-input"
         />
         <button 
           type="submit" 
-          className="add-button"
-          data-testid="add-button"
+          className="add-btn"
+          aria-label="Add todo"
+          data-testid="add-todo-button"
         >
-          Add Todo
+          Add
         </button>
       </div>
-      {error && <p className="error-message" data-testid="error-message">{error}</p>}
+      
+      {error && (
+        <div className="error-message" data-testid="error-message">
+          {error}
+        </div>
+      )}
+      
+      <div className="form-hint">
+        Press Enter or click Add to create a new todo
+      </div>
     </form>
   );
+};
+
+AddTodoForm.propTypes = {
+  onAddTodo: PropTypes.func.isRequired,
 };
 
 export default AddTodoForm;

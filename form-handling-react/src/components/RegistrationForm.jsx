@@ -1,44 +1,59 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import './RegistrationForm.css';
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
+  
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
+    setFormData({
+      ...formData,
       [name]: value
-    }));
-    // Clear error when user starts typing
+    });
+    
+    // Clear error for this field
     if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
+      setErrors({
+        ...errors,
         [name]: ''
-      }));
+      });
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
+    
     if (!formData.username.trim()) {
       newErrors.username = 'Username is required';
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
     }
+    
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
+    
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
+    
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
     return newErrors;
   };
 
@@ -50,8 +65,9 @@ const RegistrationForm = () => {
       setErrors(validationErrors);
       return;
     }
-
+    
     setIsSubmitting(true);
+    setSubmitMessage('');
     
     try {
       // Mock API call
@@ -60,17 +76,25 @@ const RegistrationForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email
+        })
       });
       
       if (response.ok) {
-        alert('Registration successful!');
-        setFormData({ username: '', email: '', password: '' });
+        setSubmitMessage('Registration successful!');
+        setFormData({
+          username: '',
+          email: '',
+          password: '',
+          confirmPassword: ''
+        });
       } else {
         throw new Error('Registration failed');
       }
     } catch (error) {
-      alert('Error during registration: ' + error.message);
+      setSubmitMessage('Error: ' + error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -78,9 +102,9 @@ const RegistrationForm = () => {
 
   return (
     <div className="registration-form">
-      <h2>Registration Form (Controlled Components)</h2>
+      <h2>User Registration (Controlled Components)</h2>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="form-group">
           <label htmlFor="username">Username:</label>
           <input
             type="text"
@@ -88,11 +112,12 @@ const RegistrationForm = () => {
             name="username"
             value={formData.username}
             onChange={handleChange}
+            className={errors.username ? 'error' : ''}
           />
-          {errors.username && <span className="error">{errors.username}</span>}
+          {errors.username && <span className="error-message">{errors.username}</span>}
         </div>
         
-        <div>
+        <div className="form-group">
           <label htmlFor="email">Email:</label>
           <input
             type="email"
@@ -100,11 +125,12 @@ const RegistrationForm = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            className={errors.email ? 'error' : ''}
           />
-          {errors.email && <span className="error">{errors.email}</span>}
+          {errors.email && <span className="error-message">{errors.email}</span>}
         </div>
         
-        <div>
+        <div className="form-group">
           <label htmlFor="password">Password:</label>
           <input
             type="password"
@@ -112,13 +138,35 @@ const RegistrationForm = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
+            className={errors.password ? 'error' : ''}
           />
-          {errors.password && <span className="error">{errors.password}</span>}
+          {errors.password && <span className="error-message">{errors.password}</span>}
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="confirmPassword">Confirm Password:</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className={errors.confirmPassword ? 'error' : ''}
+          />
+          {errors.confirmPassword && (
+            <span className="error-message">{errors.confirmPassword}</span>
+          )}
         </div>
         
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Registering...' : 'Register'}
         </button>
+        
+        {submitMessage && (
+          <div className={`submit-message ${submitMessage.includes('Error') ? 'error' : 'success'}`}>
+            {submitMessage}
+          </div>
+        )}
       </form>
     </div>
   );
