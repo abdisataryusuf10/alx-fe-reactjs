@@ -1,153 +1,179 @@
-import React from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { useState } from 'react';
 
-const FormikRegistrationForm = () => {
-  // Yup validation schema
-  const validationSchema = Yup.object({
-    username: Yup.string()
-      .min(3, 'Username must be at least 3 characters')
-      .max(20, 'Username must be 20 characters or less')
-      .required('Username is required'),
-    email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-    password: Yup.string()
-      .min(8, 'Password must be at least 8 characters')
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-      )
-      .required('Password is required'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm password is required'),
-  });
+const RegistrationForm = () => {
+  // State for controlled components
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
-  // Formik setup
-  const formik = useFormik({
-    initialValues: {
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values, { setSubmitting, resetForm }) => {
-      // Simulate API call
-      setTimeout(() => {
-        console.log('Form submitted:', values);
-        alert('Registration successful!');
-        resetForm();
-        setSubmitting(false);
-      }, 1000);
-    },
-  });
+  // BASIC VALIDATION LOGIC
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Username validation - basic check for empty field
+    if (!username) {
+      newErrors.username = 'Username is required';
+    } else if (username.length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
+    }
+    
+    // Email validation - basic check for empty field
+    if (!email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    
+    // Password validation - basic check for empty field
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    return newErrors;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Clear previous messages
+    setSuccessMessage('');
+    
+    // Validate form using basic validation logic
+    const validationErrors = validateForm();
+    
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      // Mock API call
+      const response = await fetch('https://jsonplaceholder.typicode.com/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password // Note: In real app, never send plain passwords
+        }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setSuccessMessage(`Registration successful! Welcome ${username}`);
+        
+        // Reset form
+        setUsername('');
+        setEmail('');
+        setPassword('');
+        setErrors({});
+        
+        // Log to console for demonstration
+        console.log('Registration data:', { username, email, id: data.id });
+      } else {
+        throw new Error('Registration failed');
+      }
+    } catch (error) {
+      setErrors({ submit: 'Error during registration: ' + error.message });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Handle input changes
+  const handleInputChange = (field, value) => {
+    switch(field) {
+      case 'username':
+        setUsername(value);
+        break;
+      case 'email':
+        setEmail(value);
+        break;
+      case 'password':
+        setPassword(value);
+        break;
+    }
+    
+    // Clear error for this field when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
 
   return (
-    <div className="registration-form-container">
-      <h2>Register with Formik</h2>
-      <form onSubmit={formik.handleSubmit} noValidate>
-        
-        {/* Username Field */}
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
+    <div className="registration-form">
+      <h2>Registration Form (Controlled Components)</h2>
+      <p>Using basic validation logic with controlled components</p>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="username">Username:</label>
           <input
+            type="text"
             id="username"
             name="username"
-            type="text"
-            className={`form-control ${
-              formik.touched.username && formik.errors.username ? 'error' : ''
-            }`}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.username}
+            value={username}
+            onChange={(e) => handleInputChange('username', e.target.value)}
+            className={errors.username ? 'error-input' : ''}
+            placeholder="Enter username"
           />
-          {formik.touched.username && formik.errors.username ? (
-            <div className="error-message">{formik.errors.username}</div>
-          ) : null}
+          {errors.username && <span className="error">{errors.username}</span>}
         </div>
-
-        {/* Email Field */}
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
+        
+        <div>
+          <label htmlFor="email">Email:</label>
           <input
+            type="email"
             id="email"
             name="email"
-            type="email"
-            className={`form-control ${
-              formik.touched.email && formik.errors.email ? 'error' : ''
-            }`}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.email}
+            value={email}
+            onChange={(e) => handleInputChange('email', e.target.value)}
+            className={errors.email ? 'error-input' : ''}
+            placeholder="Enter email"
           />
-          {formik.touched.email && formik.errors.email ? (
-            <div className="error-message">{formik.errors.email}</div>
-          ) : null}
+          {errors.email && <span className="error">{errors.email}</span>}
         </div>
-
-        {/* Password Field */}
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
+        
+        <div>
+          <label htmlFor="password">Password:</label>
           <input
+            type="password"
             id="password"
             name="password"
-            type="password"
-            className={`form-control ${
-              formik.touched.password && formik.errors.password ? 'error' : ''
-            }`}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.password}
+            value={password}
+            onChange={(e) => handleInputChange('password', e.target.value)}
+            className={errors.password ? 'error-input' : ''}
+            placeholder="Enter password"
           />
-          {formik.touched.password && formik.errors.password ? (
-            <div className="error-message">{formik.errors.password}</div>
-          ) : null}
+          {errors.password && <span className="error">{errors.password}</span>}
         </div>
-
-        {/* Confirm Password Field */}
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            className={`form-control ${
-              formik.touched.confirmPassword && formik.errors.confirmPassword ? 'error' : ''
-            }`}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.confirmPassword}
-          />
-          {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
-            <div className="error-message">{formik.errors.confirmPassword}</div>
-          ) : null}
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={formik.isSubmitting}
-          className="submit-btn"
-        >
-          {formik.isSubmitting ? 'Registering...' : 'Register'}
+        
+        {errors.submit && <div className="error submit-error">{errors.submit}</div>}
+        {successMessage && <div className="success">{successMessage}</div>}
+        
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Registering...' : 'Register'}
         </button>
       </form>
-
-      {/* Debug info (optional) */}
-      <div className="debug-info" style={{ marginTop: '20px' }}>
-        <h4>Form State:</h4>
-        <pre>{JSON.stringify(formik.values, null, 2)}</pre>
-        <h4>Validation Errors:</h4>
-        <pre>{JSON.stringify(formik.errors, null, 2)}</pre>
-        <h4>Form Status:</h4>
-        <p>Valid: {formik.isValid ? 'Yes' : 'No'}</p>
-        <p>Dirty: {formik.dirty ? 'Yes' : 'No'}</p>
-        <p>Touched: {JSON.stringify(formik.touched)}</p>
+      
+      <div className="validation-info">
+        <h4>Basic Validation Applied:</h4>
+        <ul>
+          <li>Username: Required, min 3 characters</li>
+          <li>Email: Required, valid format</li>
+          <li>Password: Required, min 6 characters</li>
+        </ul>
       </div>
     </div>
   );
 };
 
-export default FormikRegistrationForm;
+export default RegistrationForm;

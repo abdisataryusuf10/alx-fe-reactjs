@@ -1,144 +1,79 @@
-import React, { useState } from 'react';
-import './TodoList.css';
+import { useState } from 'react';
+import AddTodoForm from './AddTodoForm';
+import TodoItem from './TodoItem';
 
 const TodoList = () => {
   const [todos, setTodos] = useState([
-    { id: 1, text: 'Learn React', completed: false },
-    { id: 2, text: 'Build a Todo App', completed: true },
+    { id: 1, text: 'Learn React', completed: true },
+    { id: 2, text: 'Build a Todo App', completed: false },
     { id: 3, text: 'Write Tests', completed: false }
   ]);
-  const [inputValue, setInputValue] = useState('');
 
-  const handleAddTodo = () => {
-    if (inputValue.trim() === '') return;
-    
+  const addTodo = (text) => {
     const newTodo = {
       id: Date.now(),
-      text: inputValue,
+      text,
       completed: false
     };
-    
     setTodos([...todos, newTodo]);
-    setInputValue('');
   };
 
-  const handleToggleTodo = (id) => {
+  const toggleTodo = (id) => {
     setTodos(todos.map(todo =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ));
   };
 
-  const handleDeleteTodo = (id) => {
+  const deleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleAddTodo();
-    }
-  };
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
-  const getCompletedCount = () => {
-    return todos.filter(todo => todo.completed).length;
-  };
-
-  const getActiveCount = () => {
-    return todos.filter(todo => !todo.completed).length;
-  };
+  const completedTodos = todos.filter(todo => todo.completed);
+  const incompleteTodos = todos.filter(todo => !todo.completed);
 
   return (
-    <div className="todo-list-container" data-testid="todo-list">
+    <div className="todo-list" data-testid="todo-list">
       <h1>Todo List</h1>
-      <p className="subtitle">A simple todo list component with testing</p>
       
-      <div className="add-todo-form">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyPress={handleKeyPress}
-          placeholder="Add a new todo..."
-          className="todo-input"
-          data-testid="todo-input"
-        />
-        <button 
-          onClick={handleAddTodo} 
-          className="add-button"
-          data-testid="add-todo-button"
-        >
-          Add Todo
-        </button>
+      <AddTodoForm onAddTodo={addTodo} />
+      
+      <div className="stats">
+        <p>Total: {todos.length} | Completed: {completedTodos.length} | Pending: {incompleteTodos.length}</p>
       </div>
-
-      <div className="todo-stats">
-        <div className="stat">
-          <span className="stat-label">Total:</span>
-          <span className="stat-value" data-testid="total-todos">{todos.length}</span>
+      
+      {incompleteTodos.length > 0 && (
+        <div className="todo-section">
+          <h2>Pending Tasks ({incompleteTodos.length})</h2>
+          {incompleteTodos.map(todo => (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              onToggle={toggleTodo}
+              onDelete={deleteTodo}
+            />
+          ))}
         </div>
-        <div className="stat">
-          <span className="stat-label">Active:</span>
-          <span className="stat-value" data-testid="active-todos">{getActiveCount()}</span>
+      )}
+      
+      {completedTodos.length > 0 && (
+        <div className="todo-section">
+          <h2>Completed Tasks ({completedTodos.length})</h2>
+          {completedTodos.map(todo => (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              onToggle={toggleTodo}
+              onDelete={deleteTodo}
+            />
+          ))}
         </div>
-        <div className="stat">
-          <span className="stat-label">Completed:</span>
-          <span className="stat-value" data-testid="completed-todos">{getCompletedCount()}</span>
+      )}
+      
+      {todos.length === 0 && (
+        <div className="empty-state" data-testid="empty-state">
+          <p>No todos yet. Add one above!</p>
         </div>
-      </div>
-
-      <div className="todos-container">
-        {todos.length === 0 ? (
-          <p className="no-todos" data-testid="no-todos">No todos yet. Add one above!</p>
-        ) : (
-          <ul className="todos-list" data-testid="todos-list">
-            {todos.map(todo => (
-              <li 
-                key={todo.id} 
-                className={`todo-item ${todo.completed ? 'completed' : ''}`}
-                data-testid={`todo-item-${todo.id}`}
-                data-completed={todo.completed}
-              >
-                <div className="todo-content">
-                  <input
-                    type="checkbox"
-                    checked={todo.completed}
-                    onChange={() => handleToggleTodo(todo.id)}
-                    className="todo-checkbox"
-                    data-testid={`todo-checkbox-${todo.id}`}
-                  />
-                  <span 
-                    className="todo-text"
-                    data-testid={`todo-text-${todo.id}`}
-                    onClick={() => handleToggleTodo(todo.id)}
-                  >
-                    {todo.text}
-                  </span>
-                </div>
-                <button
-                  onClick={() => handleDeleteTodo(todo.id)}
-                  className="delete-button"
-                  data-testid={`delete-button-${todo.id}`}
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      <div className="instructions">
-        <h3>Testing Features:</h3>
-        <ul>
-          <li>✅ Add new todos</li>
-          <li>✅ Toggle todo completion</li>
-          <li>✅ Delete todos</li>
-          <li>✅ Update todo statistics</li>
-        </ul>
-      </div>
+      )}
     </div>
   );
 };
