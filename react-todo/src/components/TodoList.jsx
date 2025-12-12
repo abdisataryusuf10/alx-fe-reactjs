@@ -1,6 +1,4 @@
-import { useState } from 'react';
-import AddTodoForm from './AddTodoForm';
-import TodoItem from './TodoItem';
+import React, { useState } from 'react';
 
 const TodoList = () => {
   const [todos, setTodos] = useState([
@@ -9,17 +7,23 @@ const TodoList = () => {
     { id: 3, text: 'Write Tests', completed: false }
   ]);
 
-  const addTodo = (text) => {
-    const newTodo = {
+  const [newTodo, setNewTodo] = useState('');
+
+  const addTodo = () => {
+    if (newTodo.trim() === '') return;
+    
+    const todo = {
       id: Date.now(),
-      text,
+      text: newTodo,
       completed: false
     };
-    setTodos([...todos, newTodo]);
+    
+    setTodos([...todos, todo]);
+    setNewTodo('');
   };
 
   const toggleTodo = (id) => {
-    setTodos(todos.map(todo =>
+    setTodos(todos.map(todo => 
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ));
   };
@@ -28,52 +32,60 @@ const TodoList = () => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const completedTodos = todos.filter(todo => todo.completed);
-  const incompleteTodos = todos.filter(todo => !todo.completed);
-
   return (
-    <div className="todo-list" data-testid="todo-list">
+    <div className="todo-app">
       <h1>Todo List</h1>
       
-      <AddTodoForm onAddTodo={addTodo} />
-      
-      <div className="stats">
-        <p>Total: {todos.length} | Completed: {completedTodos.length} | Pending: {incompleteTodos.length}</p>
+      {/* AddTodoForm */}
+      <div className="add-todo-form">
+        <input
+          type="text"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          placeholder="Add new todo..."
+          data-testid="todo-input"
+        />
+        <button onClick={addTodo} data-testid="add-button">
+          Add Todo
+        </button>
       </div>
-      
-      {incompleteTodos.length > 0 && (
-        <div className="todo-section">
-          <h2>Pending Tasks ({incompleteTodos.length})</h2>
-          {incompleteTodos.map(todo => (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              onToggle={toggleTodo}
-              onDelete={deleteTodo}
-            />
-          ))}
-        </div>
-      )}
-      
-      {completedTodos.length > 0 && (
-        <div className="todo-section">
-          <h2>Completed Tasks ({completedTodos.length})</h2>
-          {completedTodos.map(todo => (
-            <TodoItem
-              key={todo.id}
-              todo={todo}
-              onToggle={toggleTodo}
-              onDelete={deleteTodo}
-            />
-          ))}
-        </div>
-      )}
-      
-      {todos.length === 0 && (
-        <div className="empty-state" data-testid="empty-state">
-          <p>No todos yet. Add one above!</p>
-        </div>
-      )}
+
+      {/* TodoList */}
+      <div className="todo-list" data-testid="todo-list">
+        {todos.map(todo => (
+          <div 
+            key={todo.id} 
+            className={`todo-item ${todo.completed ? 'completed' : ''}`}
+            data-testid={`todo-item-${todo.id}`}
+          >
+            <span
+              onClick={() => toggleTodo(todo.id)}
+              style={{
+                textDecoration: todo.completed ? 'line-through' : 'none',
+                cursor: 'pointer',
+                marginRight: '10px'
+              }}
+              data-testid={`todo-text-${todo.id}`}
+            >
+              {todo.text}
+            </span>
+            <button 
+              onClick={() => deleteTodo(todo.id)}
+              data-testid={`delete-button-${todo.id}`}
+            >
+              Delete
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Stats */}
+      <div className="todo-stats">
+        <p data-testid="total-todos">Total: {todos.length}</p>
+        <p data-testid="completed-todos">
+          Completed: {todos.filter(t => t.completed).length}
+        </p>
+      </div>
     </div>
   );
 };

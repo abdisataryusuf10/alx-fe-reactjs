@@ -1,0 +1,164 @@
+/* Add to existing PostsComponent.css */
+
+/* Cache Controls */
+.cache-controls {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #dee2e6;
+}
+
+.cache-controls h2 {
+  color: #495057;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.cache-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.cache-info p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.cache-info strong {
+  color: #495057;
+}
+
+.cache-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.cache-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cache-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.cache-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.force-refetch {
+  background-color: #fd7e14;
+  color: white;
+}
+
+.force-refetch:hover {
+  background-color: #e8590c;
+}
+
+.clear-cache {
+  background-color: #dc3545;
+  color: white;
+}
+
+.clear-cache:hover {
+  background-color: #c82333;
+}
+
+.prefetch {
+  background-color: #6f42c1;
+  color: white;
+}
+
+.prefetch:hover {
+  background-color: #5a32a3;
+}
+
+/* Post Header */
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.post-id {
+  background-color: #6c757d;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+/* Demonstration Section */
+.demonstration {
+  background-color: #e7f5ff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  border: 1px solid #a5d8ff;
+}
+
+.demonstration h3 {
+  color: #1864ab;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.demo-instructions {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.demo-instructions p {
+  margin: 0 0 0.5rem 0;
+  color: #495057;
+}
+
+.demo-instructions ol {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: #495057;
+}
+
+.demo-instructions li {
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cache-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .cache-buttons {
+    flex-direction: column;
+  }
+  
+  .cache-btn {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .post-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

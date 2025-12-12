@@ -1,0 +1,454 @@
+/* Add to src/styles/main.css */
+
+/* Dynamic Routing Demo */
+.blog-post-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.subtitle {
+  color: #666;
+  font-style: italic;
+  margin-bottom: 2rem;
+}
+
+.post-meta {
+  display: flex;
+  gap: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+}
+
+.post-body {
+  line-height: 1.6;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.dynamic-demo {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: #e7f5ff;
+  border-radius: 8px;
+  border: 1px solid #a5d8ff;
+}
+
+.nav-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.demo-btn {
+  padding: 0.75rem 1.5rem;
+  background: #4dabf7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.demo-btn:hover {
+  background: #339af0;
+}
+
+.demo-btn.error {
+  background: #fa5252;
+}
+
+.demo-btn.error:hover {
+  background: #e03131;
+}
+
+.url-examples {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 6px;
+}
+
+.url-examples code {
+  background: #f1f3f5;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+}
+
+.url-examples ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.url-examples li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Dropdown for dynamic routing */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-btn {
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: white;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-link {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #333;
+  text-decoration: none;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.dropdown-link:hover {
+  background: #f8f9fa;
+}
+
+/* Protected Route Info */
+.protected-route-info {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.protected-route-info ol {
+  padding-left: 1.5rem;
+}
+
+.protected-route-info li {
+  margin-bottom: 0.5rem;
+}
+
+.route-examples {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 6px;
+}
+
+/* Loading and Error States */
+.loading-container {
+  text-align: center;
+  padding: 3rem;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-container {
+  text-align: center;
+  padding: 3rem;
+}
+
+.error-container h2 {
+  color: #dc3545;
+}
+
+.home-btn {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.demo-login-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: #20c997;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.demo-login-btn:hover {
+  background: #12b886;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  margin-top: 2rem;
+}
+
+.footer-content code {
+  background: #e9ecef;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+}
+
+/* Add to src/styles/main.css */
+
+/* Protected Route Demo Styles */
+.protected-route-demo {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #4dabf7;
+}
+
+.protected-route-demo h3 {
+  color: #1864ab;
+  margin-top: 0;
+}
+
+.protected-route-demo ol {
+  padding-left: 1.5rem;
+}
+
+.protected-route-demo li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.protected-route-demo strong {
+  color: #1971c2;
+}
+
+.code-demo {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #1a1a1a;
+  border-radius: 6px;
+  color: #f8f9fa;
+  overflow-x: auto;
+}
+
+.code-demo pre {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.code-demo h4 {
+  color: #adb5bd;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* User Info in Navbar */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 1rem;
+}
+
+.user-info span {
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+/* Footer Route Info */
+.route-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.info-box {
+  padding: 1rem;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.info-box h4 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.info-box p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.info-box code {
+  background: #e9ecef;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+}
+
+/* Dashboard Styles */
+.dashboard {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.dashboard h1 {
+  color: #2c3e50;
+}
+
+.dashboard p {
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+/* Loading States */
+.loading-container {
+  text-align: center;
+  padding: 3rem;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add to src/styles/main.css */
+
+.nav-link.profile-btn {
+  background-color: #4dabf7;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.nav-link.dashboard-btn {
+  background-color: #20c997;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+}
+
+.nav-link.login-btn {
+  background-color: #ff6b6b;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.route-demo {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.route-demo ol {
+  padding-left: 1.5rem;
+}
+
+.route-demo li {
+  margin-bottom: 0.5rem;
+}
+
+/* Dashboard specific styles */
+.dashboard {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.dashboard h1 {
+  color: #2c3e50;
+  border-bottom: 2px solid #4dabf7;
+  padding-bottom: 1rem;
+}
+
+.dashboard-content {
+  margin-top: 2rem;
+}
+
+.info-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #4dabf7;
+}
+
+.info-card h3 {
+  color: #1971c2;
+  margin-top: 0;
+}
+
+.info-card ol, .info-card ul {
+  padding-left: 1.5rem;
+}
+
+.info-card li {
+  margin-bottom: 0.5rem;
+}
+
+.info-card code {
+  background: #e9ecef;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+}
