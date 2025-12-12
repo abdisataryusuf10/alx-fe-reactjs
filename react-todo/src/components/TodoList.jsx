@@ -1,54 +1,78 @@
-// ---------------- src/components/TodoList.jsx ----------------
 import React, { useState } from 'react';
-import AddTodoForm from './AddTodoForm';
 
+const TodoList = () => {
+  // Component Requirements: Display list from static array
+  const [todos, setTodos] = useState([
+    { id: 1, text: 'Learn React', completed: true },
+    { id: 2, text: 'Build a Todo App', completed: false },
+    { id: 3, text: 'Write Tests', completed: false }
+  ]);
 
-export default function TodoList() {
-const [todos, setTodos] = useState([
-{ id: 1, text: 'Buy milk', completed: false },
-{ id: 2, text: 'Walk the dog', completed: true },
-{ id: 3, text: 'Read a book', completed: false },
-]);
+  const [inputValue, setInputValue] = useState('');
 
+  // AddTodoForm: Allows users to add new todos
+  const handleAddTodo = (e) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
+      const newTodo = {
+        id: Date.now(),
+        text: inputValue.trim(),
+        completed: false
+      };
+      setTodos([...todos, newTodo]);
+      setInputValue('');
+    }
+  };
 
-function addTodo(text) {
-const nextId = todos.length ? Math.max(...todos.map(t => t.id)) + 1 : 1;
-setTodos([...todos, { id: nextId, text, completed: false }]);
-}
+  // Todos can be toggled between completed and not completed by clicking on them
+  const handleToggleTodo = (id) => {
+    setTodos(todos.map(todo => 
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
 
+  // Todos can be deleted individually
+  const handleDeleteTodo = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
 
-function toggleTodo(id) {
-setTodos(todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
-}
+  return (
+    <div>
+      <h1>Todo List</h1>
+      
+      {/* AddTodoForm - allows users to add new todos */}
+      <form onSubmit={handleAddTodo}>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="Add new todo"
+        />
+        <button type="submit">Add Todo</button>
+      </form>
 
+      {/* TodoList - displays list of todo items from static array */}
+      <ul>
+        {todos.map(todo => (
+          <li key={todo.id}>
+            <span
+              onClick={() => handleToggleTodo(todo.id)}
+              style={{
+                textDecoration: todo.completed ? 'line-through' : 'none',
+                cursor: 'pointer',
+                marginRight: '10px'
+              }}
+            >
+              {todo.text}
+            </span>
+            <button onClick={() => handleDeleteTodo(todo.id)}>
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
-function deleteTodo(id) {
-setTodos(todos.filter(t => t.id !== id));
-}
-
-
-return (
-<div>
-<h2>Todo List</h2>
-<AddTodoForm onAdd={addTodo} />
-<ul aria-label="todo-list">
-{todos.map(todo => (
-<li key={todo.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-<span
-role="button"
-tabIndex={0}
-onClick={() => toggleTodo(todo.id)}
-onKeyDown={(e) => { if (e.key === 'Enter') toggleTodo(todo.id); }}
-aria-pressed={todo.completed}
-data-testid={`todo-text-${todo.id}`}
-style={{ textDecoration: todo.completed ? 'line-through' : 'none', cursor: 'pointer' }}
->
-{todo.text}
-</span>
-<button aria-label={`delete-${todo.id}`} onClick={() => deleteTodo(todo.id)}>Delete</button>
-</li>
-))}
-</ul>
-</div>
-);
-}
+export default TodoList;

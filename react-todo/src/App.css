@@ -18,13 +18,13 @@
   margin-bottom: 20px;
 }
 
-.add-todo-form {
+.todo-form {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
 }
 
-.add-todo-form input {
+.todo-form input {
   flex: 1;
   padding: 10px;
   border: 1px solid #ddd;
@@ -32,7 +32,7 @@
   font-size: 16px;
 }
 
-.add-todo-form button {
+.todo-form button {
   padding: 10px 20px;
   background-color: #4CAF50;
   color: white;
@@ -42,12 +42,10 @@
   font-size: 16px;
 }
 
-.add-todo-form button:hover {
-  background-color: #45a049;
-}
-
 .todo-list {
-  margin-bottom: 20px;
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 20px 0;
 }
 
 .todo-item {
@@ -61,26 +59,23 @@
   margin-bottom: 10px;
 }
 
-.todo-item.completed {
-  background-color: #f0f0f0;
-  opacity: 0.7;
-}
-
-.todo-item span {
+.todo-text {
   flex: 1;
+  cursor: pointer;
 }
 
-.todo-item button {
+.todo-text.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.delete-btn {
   padding: 5px 10px;
   background-color: #f44336;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
-
-.todo-item button:hover {
-  background-color: #d32f2f;
 }
 
 .todo-stats {
