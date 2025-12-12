@@ -1,30 +1,29 @@
+// ---------------- src/components/AddTodoForm.jsx ----------------
 import React, { useState } from 'react';
 
-const AddTodoForm = ({ onAdd }) => {
-  const [input, setInput] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (input.trim()) {
-      onAdd(input);
-      setInput('');
-    }
-  };
+export default function AddTodoForm({ onAdd }) {
+const [text, setText] = useState('');
 
-  return (
-    <form onSubmit={handleSubmit} className="add-todo-form">
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Add a new todo..."
-        className="todo-input"
-      />
-      <button type="submit" className="add-button">
-        Add
-      </button>
-    </form>
-  );
-};
 
-export default AddTodoForm;
+function handleSubmit(e) {
+e.preventDefault();
+const trimmed = text.trim();
+if (!trimmed) return;
+onAdd(trimmed);
+setText('');
+}
+
+
+return (
+<form onSubmit={handleSubmit} aria-label="add-todo-form">
+<input
+aria-label="new-todo-input"
+value={text}
+onChange={(e) => setText(e.target.value)}
+placeholder="Add todo"
+/>
+<button type="submit">Add</button>
+</form>
+);
+}

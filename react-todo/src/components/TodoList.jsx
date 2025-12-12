@@ -1,93 +1,54 @@
+// ---------------- src/components/TodoList.jsx ----------------
 import React, { useState } from 'react';
+import AddTodoForm from './AddTodoForm';
 
-const TodoList = () => {
-  const [todos, setTodos] = useState([
-    { id: 1, text: 'Learn React', completed: true },
-    { id: 2, text: 'Build a Todo App', completed: false },
-    { id: 3, text: 'Write Tests', completed: false }
-  ]);
 
-  const [newTodo, setNewTodo] = useState('');
+export default function TodoList() {
+const [todos, setTodos] = useState([
+{ id: 1, text: 'Buy milk', completed: false },
+{ id: 2, text: 'Walk the dog', completed: true },
+{ id: 3, text: 'Read a book', completed: false },
+]);
 
-  const addTodo = () => {
-    if (newTodo.trim() === '') return;
-    
-    const todo = {
-      id: Date.now(),
-      text: newTodo,
-      completed: false
-    };
-    
-    setTodos([...todos, todo]);
-    setNewTodo('');
-  };
 
-  const toggleTodo = (id) => {
-    setTodos(todos.map(todo => 
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
-  };
+function addTodo(text) {
+const nextId = todos.length ? Math.max(...todos.map(t => t.id)) + 1 : 1;
+setTodos([...todos, { id: nextId, text, completed: false }]);
+}
 
-  const deleteTodo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id));
-  };
 
-  return (
-    <div className="todo-app">
-      <h1>Todo List</h1>
-      
-      {/* AddTodoForm */}
-      <div className="add-todo-form">
-        <input
-          type="text"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Add new todo..."
-          data-testid="todo-input"
-        />
-        <button onClick={addTodo} data-testid="add-button">
-          Add Todo
-        </button>
-      </div>
+function toggleTodo(id) {
+setTodos(todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+}
 
-      {/* TodoList */}
-      <div className="todo-list" data-testid="todo-list">
-        {todos.map(todo => (
-          <div 
-            key={todo.id} 
-            className={`todo-item ${todo.completed ? 'completed' : ''}`}
-            data-testid={`todo-item-${todo.id}`}
-          >
-            <span
-              onClick={() => toggleTodo(todo.id)}
-              style={{
-                textDecoration: todo.completed ? 'line-through' : 'none',
-                cursor: 'pointer',
-                marginRight: '10px'
-              }}
-              data-testid={`todo-text-${todo.id}`}
-            >
-              {todo.text}
-            </span>
-            <button 
-              onClick={() => deleteTodo(todo.id)}
-              data-testid={`delete-button-${todo.id}`}
-            >
-              Delete
-            </button>
-          </div>
-        ))}
-      </div>
 
-      {/* Stats */}
-      <div className="todo-stats">
-        <p data-testid="total-todos">Total: {todos.length}</p>
-        <p data-testid="completed-todos">
-          Completed: {todos.filter(t => t.completed).length}
-        </p>
-      </div>
-    </div>
-  );
-};
+function deleteTodo(id) {
+setTodos(todos.filter(t => t.id !== id));
+}
 
-export default TodoList;
+
+return (
+<div>
+<h2>Todo List</h2>
+<AddTodoForm onAdd={addTodo} />
+<ul aria-label="todo-list">
+{todos.map(todo => (
+<li key={todo.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+<span
+role="button"
+tabIndex={0}
+onClick={() => toggleTodo(todo.id)}
+onKeyDown={(e) => { if (e.key === 'Enter') toggleTodo(todo.id); }}
+aria-pressed={todo.completed}
+data-testid={`todo-text-${todo.id}`}
+style={{ textDecoration: todo.completed ? 'line-through' : 'none', cursor: 'pointer' }}
+>
+{todo.text}
+</span>
+<button aria-label={`delete-${todo.id}`} onClick={() => deleteTodo(todo.id)}>Delete</button>
+</li>
+))}
+</ul>
+</div>
+);
+}
