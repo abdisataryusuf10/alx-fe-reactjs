@@ -1,183 +1,153 @@
-import React, { useState } from 'react';
-import './RegistrationForm.css';
+import React from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
-const RegistrationForm = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
+const FormikRegistrationForm = () => {
+  // Yup validation schema
+  const validationSchema = Yup.object({
+    username: Yup.string()
+      .min(3, 'Username must be at least 3 characters')
+      .max(20, 'Username must be 20 characters or less')
+      .required('Username is required'),
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required'),
+    password: Yup.string()
+      .min(8, 'Password must be at least 8 characters')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+      )
+      .required('Password is required'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm password is required'),
+  });
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
-    if (errors.username) {
-      setErrors({ ...errors, username: '' });
-    }
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    if (errors.email) {
-      setErrors({ ...errors, email: '' });
-    }
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    if (errors.password) {
-      setErrors({ ...errors, password: '' });
-    }
-  };
-
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-    if (errors.confirmPassword) {
-      setErrors({ ...errors, confirmPassword: '' });
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!username.trim()) {
-      newErrors.username = 'Username is required';
-    } else if (username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
-    }
-    
-    if (!email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!password) {
-      newErrors.password = 'Password is required';
-    } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-    
-    return newErrors;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validateForm();
-    
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-    
-    setIsSubmitting(true);
-    setSubmitMessage('');
-    
-    try {
-      // Mock API call
-      const response = await fetch('https://jsonplaceholder.typicode.com/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: username,
-          email: email
-        })
-      });
-      
-      if (response.ok) {
-        setSubmitMessage('Registration successful!');
-        setUsername('');
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-      } else {
-        throw new Error('Registration failed');
-      }
-    } catch (error) {
-      setSubmitMessage('Error: ' + error.message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  // Formik setup
+  const formik = useFormik({
+    initialValues: {
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values, { setSubmitting, resetForm }) => {
+      // Simulate API call
+      setTimeout(() => {
+        console.log('Form submitted:', values);
+        alert('Registration successful!');
+        resetForm();
+        setSubmitting(false);
+      }, 1000);
+    },
+  });
 
   return (
-    <div className="registration-form">
-      <h2>User Registration (Controlled Components)</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="registration-form-container">
+      <h2>Register with Formik</h2>
+      <form onSubmit={formik.handleSubmit} noValidate>
+        
+        {/* Username Field */}
         <div className="form-group">
-          <label htmlFor="username">Username:</label>
+          <label htmlFor="username">Username</label>
           <input
-            type="text"
             id="username"
             name="username"
-            value={username}
-            onChange={handleUsernameChange}
-            className={errors.username ? 'error' : ''}
+            type="text"
+            className={`form-control ${
+              formik.touched.username && formik.errors.username ? 'error' : ''
+            }`}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.username}
           />
-          {errors.username && <span className="error-message">{errors.username}</span>}
+          {formik.touched.username && formik.errors.username ? (
+            <div className="error-message">{formik.errors.username}</div>
+          ) : null}
         </div>
-        
+
+        {/* Email Field */}
         <div className="form-group">
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="email">Email</label>
           <input
-            type="email"
             id="email"
             name="email"
-            value={email}
-            onChange={handleEmailChange}
-            className={errors.email ? 'error' : ''}
+            type="email"
+            className={`form-control ${
+              formik.touched.email && formik.errors.email ? 'error' : ''
+            }`}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.email}
           />
-          {errors.email && <span className="error-message">{errors.email}</span>}
+          {formik.touched.email && formik.errors.email ? (
+            <div className="error-message">{formik.errors.email}</div>
+          ) : null}
         </div>
-        
+
+        {/* Password Field */}
         <div className="form-group">
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="password">Password</label>
           <input
-            type="password"
             id="password"
             name="password"
-            value={password}
-            onChange={handlePasswordChange}
-            className={errors.password ? 'error' : ''}
-          />
-          {errors.password && <span className="error-message">{errors.password}</span>}
-        </div>
-        
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input
             type="password"
+            className={`form-control ${
+              formik.touched.password && formik.errors.password ? 'error' : ''
+            }`}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.password}
+          />
+          {formik.touched.password && formik.errors.password ? (
+            <div className="error-message">{formik.errors.password}</div>
+          ) : null}
+        </div>
+
+        {/* Confirm Password Field */}
+        <div className="form-group">
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input
             id="confirmPassword"
             name="confirmPassword"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            className={errors.confirmPassword ? 'error' : ''}
+            type="password"
+            className={`form-control ${
+              formik.touched.confirmPassword && formik.errors.confirmPassword ? 'error' : ''
+            }`}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.confirmPassword}
           />
-          {errors.confirmPassword && (
-            <span className="error-message">{errors.confirmPassword}</span>
-          )}
+          {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+            <div className="error-message">{formik.errors.confirmPassword}</div>
+          ) : null}
         </div>
-        
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Registering...' : 'Register'}
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={formik.isSubmitting}
+          className="submit-btn"
+        >
+          {formik.isSubmitting ? 'Registering...' : 'Register'}
         </button>
-        
-        {submitMessage && (
-          <div className={`submit-message ${submitMessage.includes('Error') ? 'error' : 'success'}`}>
-            {submitMessage}
-          </div>
-        )}
       </form>
+
+      {/* Debug info (optional) */}
+      <div className="debug-info" style={{ marginTop: '20px' }}>
+        <h4>Form State:</h4>
+        <pre>{JSON.stringify(formik.values, null, 2)}</pre>
+        <h4>Validation Errors:</h4>
+        <pre>{JSON.stringify(formik.errors, null, 2)}</pre>
+        <h4>Form Status:</h4>
+        <p>Valid: {formik.isValid ? 'Yes' : 'No'}</p>
+        <p>Dirty: {formik.dirty ? 'Yes' : 'No'}</p>
+        <p>Touched: {JSON.stringify(formik.touched)}</p>
+      </div>
     </div>
   );
 };
 
-export default RegistrationForm;
+export default FormikRegistrationForm;

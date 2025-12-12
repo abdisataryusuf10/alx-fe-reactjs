@@ -1,95 +1,75 @@
-.registration-form {
+.registration-form-container {
   max-width: 400px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.registration-form h2 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 1.5rem;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
-  color: #555;
-  font-weight: 500;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
-.form-group input,
-.form-field {
+.form-control {
   width: 100%;
-  padding: 0.75rem;
+  padding: 8px 12px;
+  font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
+  box-sizing: border-box;
 }
 
-.form-group input:focus,
-.form-field:focus {
-  outline: none;
-  border-color: #646cff;
-}
-
-.form-group input.error,
-.form-field.error {
-  border-color: #ff4444;
+.form-control.error {
+  border-color: #e74c3c;
 }
 
 .error-message {
-  color: #ff4444;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-  display: block;
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 5px;
 }
 
-button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #646cff;
+.submit-btn {
+  background-color: #3498db;
   color: white;
+  padding: 10px 20px;
   border: none;
   border-radius: 4px;
-  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 1rem;
+  font-size: 16px;
+  width: 100%;
 }
 
-button:hover:not(:disabled) {
-  background-color: #535bf2;
+.submit-btn:hover {
+  background-color: #2980b9;
 }
 
-button:disabled {
-  background-color: #cccccc;
+.submit-btn:disabled {
+  background-color: #95a5a6;
   cursor: not-allowed;
 }
 
-.submit-message {
-  margin-top: 1rem;
-  padding: 0.75rem;
+.debug-info {
+  background-color: #f8f9fa;
+  padding: 15px;
   border-radius: 4px;
-  text-align: center;
-  font-weight: 500;
+  margin-top: 20px;
+  font-size: 12px;
 }
 
-.submit-message.success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+.debug-info h4 {
+  margin-top: 0;
+  margin-bottom: 5px;
 }
 
-.submit-message.error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+.debug-info pre {
+  background-color: #e9ecef;
+  padding: 10px;
+  border-radius: 3px;
+  overflow: auto;
 }
