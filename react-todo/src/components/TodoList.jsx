@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 
 const TodoList = () => {
-  // Component Requirements: Display list from static array
+  // 1. Display list from static array
   const [todos, setTodos] = useState([
     { id: 1, text: 'Learn React', completed: true },
     { id: 2, text: 'Build a Todo App', completed: false },
     { id: 3, text: 'Write Tests', completed: false }
   ]);
 
+  // 2. AddTodoForm functionality
   const [inputValue, setInputValue] = useState('');
-
-  // AddTodoForm: Allows users to add new todos
+  
   const handleAddTodo = (e) => {
     e.preventDefault();
     if (inputValue.trim()) {
@@ -24,14 +24,14 @@ const TodoList = () => {
     }
   };
 
-  // Todos can be toggled between completed and not completed by clicking on them
+  // 3. Toggle completion by clicking
   const handleToggleTodo = (id) => {
     setTodos(todos.map(todo => 
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ));
   };
 
-  // Todos can be deleted individually
+  // 4. Delete individually
   const handleDeleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
@@ -40,7 +40,7 @@ const TodoList = () => {
     <div>
       <h1>Todo List</h1>
       
-      {/* AddTodoForm - allows users to add new todos */}
+      {/* AddTodoForm */}
       <form onSubmit={handleAddTodo}>
         <input
           type="text"
@@ -51,7 +51,7 @@ const TodoList = () => {
         <button type="submit">Add Todo</button>
       </form>
 
-      {/* TodoList - displays list of todo items from static array */}
+      {/* Todo items list */}
       <ul>
         {todos.map(todo => (
           <li key={todo.id}>
