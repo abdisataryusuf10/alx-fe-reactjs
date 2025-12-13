@@ -1,34 +1,37 @@
-vimport React, { useState } from 'react';
+import React, { useState } from 'react';
 
 const TodoList = () => {
-  // Static array of todos
+  // 1. Static array of todos
   const [todos, setTodos] = useState([
     { id: 1, text: 'Learn React', completed: true },
     { id: 2, text: 'Build a Todo App', completed: false },
     { id: 3, text: 'Write Tests', completed: false }
   ]);
 
-  const [inputValue, setInputValue] = useState('');
+  const [input, setInput] = useState('');
 
-  const handleSubmit = (e) => {
+  // 2. Add todo
+  const addTodo = (e) => {
     e.preventDefault();
-    if (inputValue.trim()) {
+    if (input.trim()) {
       const newTodo = {
         id: Date.now(),
-        text: inputValue.trim(),
+        text: input,
         completed: false
       };
       setTodos([...todos, newTodo]);
-      setInputValue('');
+      setInput('');
     }
   };
 
+  // 3. Toggle todo (click to toggle)
   const toggleTodo = (id) => {
     setTodos(todos.map(todo => 
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ));
   };
 
+  // 4. Delete todo
   const deleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
@@ -37,18 +40,18 @@ const TodoList = () => {
     <div>
       <h1>Todo List</h1>
       
-      {/* AddTodoForm - must exist */}
-      <form onSubmit={handleSubmit}>
+      {/* AddTodoForm */}
+      <form onSubmit={addTodo}>
         <input
           type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
           placeholder="Add new todo"
         />
         <button type="submit">Add Todo</button>
       </form>
 
-      {/* Todo items list - from static array */}
+      {/* Todo items */}
       <ul>
         {todos.map(todo => (
           <li key={todo.id}>
@@ -56,15 +59,12 @@ const TodoList = () => {
               onClick={() => toggleTodo(todo.id)}
               style={{
                 textDecoration: todo.completed ? 'line-through' : 'none',
-                cursor: 'pointer',
-                marginRight: '10px'
+                cursor: 'pointer'
               }}
             >
               {todo.text}
             </span>
-            <button onClick={() => deleteTodo(todo.id)}>
-              Delete
-            </button>
+            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
           </li>
         ))}
       </ul>
